@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Property Types -->
+        <record id="property_type_building" model="property.type">
+            <field name="name">Building</field>
+            <field name="code">BLDG</field>
+            <field name="sequence">10</field>
+            <field name="description">Physical building structure</field>
+        </record>
+
+        <record id="property_type_floor" model="property.type">
+            <field name="name">Floor</field>
+            <field name="code">FLR</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" ref="property_type_building"/>
+            <field name="description">Building floor/level</field>
+        </record>
+
+        <record id="property_type_office" model="property.type">
+            <field name="name">Office</field>
+            <field name="code">OFF</field>
+            <field name="sequence">30</field>
+            <field name="description">Office space</field>
+        </record>
+
+        <record id="property_type_meeting_room" model="property.type">
+            <field name="name">Meeting Room</field>
+            <field name="code">MTG</field>
+            <field name="sequence">40</field>
+            <field name="description">Meeting/Conference room</field>
+        </record>
+
+        <record id="property_type_conference_hall" model="property.type">
+            <field name="name">Conference Hall</field>
+            <field name="code">CONF</field>
+            <field name="sequence">50</field>
+            <field name="description">Large conference/event hall</field>
+        </record>
+
+        <record id="property_type_training_room" model="property.type">
+            <field name="name">Training Room</field>
+            <field name="code">TRN</field>
+            <field name="sequence">60</field>
+            <field name="description">Training/Workshop room</field>
+        </record>
+
+        <record id="property_type_server_room" model="property.type">
+            <field name="name">Server Room</field>
+            <field name="code">SRV</field>
+            <field name="sequence">70</field>
+            <field name="description">Data center/Server room</field>
+        </record>
+
+        <record id="property_type_storage" model="property.type">
+            <field name="name">Storage Room</field>
+            <field name="code">STR</field>
+            <field name="sequence">80</field>
+            <field name="description">Storage facility</field>
+        </record>
+
+        <record id="property_type_reception" model="property.type">
+            <field name="name">Reception Area</field>
+            <field name="code">RCP</field>
+            <field name="sequence">90</field>
+            <field name="description">Reception/Lobby area</field>
+        </record>
+
+        <record id="property_type_cafeteria" model="property.type">
+            <field name="name">Cafeteria</field>
+            <field name="code">CAF</field>
+            <field name="sequence">100</field>
+            <field name="description">Cafeteria/Break room</field>
+        </record>
+
+        <!-- Asset Categories -->
+        <record id="asset_category_it_equipment" model="asset.category">
+            <field name="name">IT Equipment</field>
+            <field name="code">IT</field>
+            <field name="sequence">10</field>
+            <field name="description">Information Technology equipment</field>
+            <field name="default_depreciation_years">3</field>
+            <field name="requires_serial">True</field>
+            <field name="requires_maintenance">True</field>
+            <field name="maintenance_frequency">365</field>
+        </record>
+
+        <record id="asset_category_computer" model="asset.category">
+            <field name="name">Computers</field>
+            <field name="code">IT-COMP</field>
+            <field name="sequence">11</field>
+            <field name="parent_id" ref="asset_category_it_equipment"/>
+            <field name="default_depreciation_years">3</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_monitor" model="asset.category">
+            <field name="name">Monitors</field>
+            <field name="code">IT-MON</field>
+            <field name="sequence">12</field>
+            <field name="parent_id" ref="asset_category_it_equipment"/>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_printer" model="asset.category">
+            <field name="name">Printers</field>
+            <field name="code">IT-PRT</field>
+            <field name="sequence">13</field>
+            <field name="parent_id" ref="asset_category_it_equipment"/>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+            <field name="requires_maintenance">True</field>
+            <field name="maintenance_frequency">180</field>
+        </record>
+
+        <record id="asset_category_projector" model="asset.category">
+            <field name="name">Projectors</field>
+            <field name="code">IT-PROJ</field>
+            <field name="sequence">14</field>
+            <field name="parent_id" ref="asset_category_it_equipment"/>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+            <field name="requires_maintenance">True</field>
+            <field name="maintenance_frequency">365</field>
+        </record>
+
+        <record id="asset_category_network" model="asset.category">
+            <field name="name">Network Equipment</field>
+            <field name="code">IT-NET</field>
+            <field name="sequence">15</field>
+            <field name="parent_id" ref="asset_category_it_equipment"/>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_furniture" model="asset.category">
+            <field name="name">Furniture</field>
+            <field name="code">FURN</field>
+            <field name="sequence">20</field>
+            <field name="description">Office furniture</field>
+            <field name="default_depreciation_years">10</field>
+            <field name="requires_serial">False</field>
+        </record>
+
+        <record id="asset_category_desk" model="asset.category">
+            <field name="name">Desks</field>
+            <field name="code">FURN-DSK</field>
+            <field name="sequence">21</field>
+            <field name="parent_id" ref="asset_category_furniture"/>
+            <field name="default_depreciation_years">10</field>
+            <field name="requires_serial">False</field>
+        </record>
+
+        <record id="asset_category_chair" model="asset.category">
+            <field name="name">Chairs</field>
+            <field name="code">FURN-CHR</field>
+            <field name="sequence">22</field>
+            <field name="parent_id" ref="asset_category_furniture"/>
+            <field name="default_depreciation_years">7</field>
+            <field name="requires_serial">False</field>
+        </record>
+
+        <record id="asset_category_cabinet" model="asset.category">
+            <field name="name">Cabinets</field>
+            <field name="code">FURN-CAB</field>
+            <field name="sequence">23</field>
+            <field name="parent_id" ref="asset_category_furniture"/>
+            <field name="default_depreciation_years">10</field>
+            <field name="requires_serial">False</field>
+        </record>
+
+        <record id="asset_category_av_equipment" model="asset.category">
+            <field name="name">AV Equipment</field>
+            <field name="code">AV</field>
+            <field name="sequence">30</field>
+            <field name="description">Audio/Visual equipment</field>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+            <field name="requires_maintenance">True</field>
+            <field name="maintenance_frequency">365</field>
+        </record>
+
+        <record id="asset_category_display" model="asset.category">
+            <field name="name">Display Screens</field>
+            <field name="code">AV-DSP</field>
+            <field name="sequence">31</field>
+            <field name="parent_id" ref="asset_category_av_equipment"/>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_sound" model="asset.category">
+            <field name="name">Sound Systems</field>
+            <field name="code">AV-SND</field>
+            <field name="sequence">32</field>
+            <field name="parent_id" ref="asset_category_av_equipment"/>
+            <field name="default_depreciation_years">7</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_camera" model="asset.category">
+            <field name="name">Cameras</field>
+            <field name="code">AV-CAM</field>
+            <field name="sequence">33</field>
+            <field name="parent_id" ref="asset_category_av_equipment"/>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_appliances" model="asset.category">
+            <field name="name">Appliances</field>
+            <field name="code">APPL</field>
+            <field name="sequence">40</field>
+            <field name="description">Office appliances</field>
+            <field name="default_depreciation_years">7</field>
+            <field name="requires_serial">True</field>
+        </record>
+
+        <record id="asset_category_hvac" model="asset.category">
+            <field name="name">HVAC Equipment</field>
+            <field name="code">HVAC</field>
+            <field name="sequence">50</field>
+            <field name="description">Heating, Ventilation, and Air Conditioning</field>
+            <field name="default_depreciation_years">10</field>
+            <field name="requires_serial">True</field>
+            <field name="requires_maintenance">True</field>
+            <field name="maintenance_frequency">180</field>
+        </record>
+
+        <record id="asset_category_safety" model="asset.category">
+            <field name="name">Safety Equipment</field>
+            <field name="code">SAFE</field>
+            <field name="sequence">60</field>
+            <field name="description">Safety and security equipment</field>
+            <field name="default_depreciation_years">5</field>
+            <field name="requires_serial">True</field>
+            <field name="requires_maintenance">True</field>
+            <field name="maintenance_frequency">90</field>
+        </record>
+    </data>
+</odoo>

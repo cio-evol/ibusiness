@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Property Sequence -->
+        <record id="seq_property_property" model="ir.sequence">
+            <field name="name">Property Sequence</field>
+            <field name="code">property.property</field>
+            <field name="prefix">PROP/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Asset Sequence -->
+        <record id="seq_product_asset" model="ir.sequence">
+            <field name="name">Asset Sequence</field>
+            <field name="code">product.asset</field>
+            <field name="prefix">ASSET/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Asset Assignment Sequence -->
+        <record id="seq_asset_assignment" model="ir.sequence">
+            <field name="name">Asset Assignment Sequence</field>
+            <field name="code">asset.assignment</field>
+            <field name="prefix">ASSIGN/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Asset Maintenance Sequence -->
+        <record id="seq_asset_maintenance" model="ir.sequence">
+            <field name="name">Asset Maintenance Sequence</field>
+            <field name="code">asset.maintenance</field>
+            <field name="prefix">MAINT/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Maintenance Request Sequence -->
+        <record id="seq_maintenance_request" model="ir.sequence">
+            <field name="name">Maintenance Request Sequence</field>
+            <field name="code">asset.maintenance.request</field>
+            <field name="prefix">REQ/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <!-- Asset Transfer Sequence -->
+        <record id="seq_asset_transfer" model="ir.sequence">
+            <field name="name">Asset Transfer Sequence</field>
+            <field name="code">asset.transfer</field>
+            <field name="prefix">TRANS/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

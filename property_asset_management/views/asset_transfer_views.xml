@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Asset Transfer Tree View -->
+    <record id="view_asset_transfer_tree" model="ir.ui.view">
+        <field name="name">asset.transfer.tree</field>
+        <field name="model">asset.transfer</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'done'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="transfer_date"/>
+                <field name="source_property_id"/>
+                <field name="destination_property_id"/>
+                <field name="line_count" string="Equipment"/>
+                <field name="transferred_by_id" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'done'" decoration-muted="state == 'cancelled'"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Asset Transfer Form View -->
+    <record id="view_asset_transfer_form" model="ir.ui.view">
+        <field name="name">asset.transfer.form</field>
+        <field name="model">asset.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" string="Validate Transfer" type="object" class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancelled')"/>
+                    <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Source">
+                            <field name="source_property_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Destination">
+                            <field name="destination_property_id" readonly="state != 'draft'" domain="[('id', '!=', source_property_id), ('state', '=', 'active')]"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="transfer_date" readonly="state != 'draft'"/>
+                            <field name="transferred_by_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Equipment to Transfer" name="lines">
+                            <field name="transfer_line_ids" readonly="state not in ('draft', 'confirmed')">
+                                <list editable="bottom">
+                                    <field name="asset_id" domain="[('is_asset', '=', True), ('current_property_id', '=', parent.source_property_id)]"/>
+                                    <field name="asset_code" readonly="1"/>
+                                    <field name="asset_category_id" readonly="1"/>
+                                    <field name="source_property_id" readonly="1" optional="hide"/>
+                                    <field name="destination_property_id" readonly="1" optional="hide"/>
+                                    <field name="current_assignment_id" readonly="1" optional="hide"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Reason / Notes" name="reason">
+                            <field name="reason" placeholder="Reason for this transfer..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Transfer Search View -->
+    <record id="view_asset_transfer_search" model="ir.ui.view">
+        <field name="name">asset.transfer.search</field>
+        <field name="model">asset.transfer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="source_property_id"/>
+                <field name="destination_property_id"/>
+                <field name="transferred_by_id"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <filter string="My Transfers" name="my_transfers" domain="[('transferred_by_id', '=', uid)]"/>
+                <group>
+                    <filter string="Source Property" name="source" context="{'group_by': 'source_property_id'}"/>
+                    <filter string="Destination Property" name="destination" context="{'group_by': 'destination_property_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Transfer Date" name="transfer_date" context="{'group_by': 'transfer_date:month'}"/>
+                    <filter string="Transferred By" name="transferred_by" context="{'group_by': 'transferred_by_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Transfer Action -->
+    <record id="action_asset_transfer" model="ir.actions.act_window">
+        <field name="name">Internal Transfers</field>
+        <field name="res_model">asset.transfer</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first equipment transfer
+            </p>
+            <p>
+                Transfer equipment between properties and rooms.
+                Assets will be automatically returned from the source and assigned to the destination.
+            </p>
+        </field>
+    </record>
+</odoo>
