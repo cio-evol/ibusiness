@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_property_asset_root"
+              name="Property &amp; Assets"
+              web_icon="property_asset_management,static/description/icon.png"
+              sequence="45"/>
+
+    <!-- Properties Menu -->
+    <menuitem id="menu_property"
+              name="Properties"
+              parent="menu_property_asset_root"
+              sequence="10"/>
+
+    <menuitem id="menu_property_property"
+              name="All Properties"
+              parent="menu_property"
+              action="action_property_property"
+              sequence="10"/>
+
+    <menuitem id="menu_property_type"
+              name="Property Types"
+              parent="menu_property"
+              action="action_property_type"
+              sequence="20"
+              groups="property_asset_management.group_property_asset_officer"/>
+
+    <!-- Assets Menu -->
+    <menuitem id="menu_asset"
+              name="Assets"
+              parent="menu_property_asset_root"
+              sequence="20"/>
+
+    <menuitem id="menu_product_asset"
+              name="All Assets"
+              parent="menu_asset"
+              action="action_product_asset"
+              sequence="10"/>
+
+    <menuitem id="menu_asset_category"
+              name="Asset Categories"
+              parent="menu_asset"
+              action="action_asset_category"
+              sequence="20"
+              groups="property_asset_management.group_property_asset_officer"/>
+
+    <menuitem id="menu_asset_quick_assign"
+              name="Quick Assign"
+              parent="menu_asset"
+              action="action_asset_quick_assign"
+              sequence="30"
+              groups="property_asset_management.group_property_asset_officer"/>
+
+    <!-- Assignments Menu -->
+    <menuitem id="menu_assignment"
+              name="Assignments"
+              parent="menu_property_asset_root"
+              sequence="30"/>
+
+    <menuitem id="menu_asset_assignment"
+              name="All Assignments"
+              parent="menu_assignment"
+              action="action_asset_assignment"
+              sequence="10"/>
+
+    <menuitem id="menu_asset_bulk_return"
+              name="Bulk Return"
+              parent="menu_assignment"
+              action="action_asset_bulk_return"
+              sequence="20"
+              groups="property_asset_management.group_property_asset_officer"/>
+
+    <menuitem id="menu_asset_transfer"
+              name="Internal Transfers"
+              parent="menu_assignment"
+              action="action_asset_transfer"
+              sequence="30"
+              groups="property_asset_management.group_property_asset_officer"/>
+
+    <!-- Maintenance Menu -->
+    <menuitem id="menu_maintenance"
+              name="Maintenance"
+              parent="menu_property_asset_root"
+              sequence="40"/>
+
+    <menuitem id="menu_asset_maintenance"
+              name="Maintenance Records"
+              parent="menu_maintenance"
+              action="action_asset_maintenance"
+              sequence="10"/>
+
+    <menuitem id="menu_maintenance_request"
+              name="Maintenance Requests"
+              parent="menu_maintenance"
+              action="action_maintenance_request"
+              sequence="20"/>
+
+    <!-- Reporting Menu -->
+    <menuitem id="menu_reporting"
+              name="Reporting"
+              parent="menu_property_asset_root"
+              sequence="50"
+              groups="property_asset_management.group_property_asset_officer"/>
+
+    <menuitem id="menu_report_property_asset"
+              name="Property Assets Report"
+              parent="menu_reporting"
+              action="action_report_property_asset"
+              sequence="10"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_configuration"
+              name="Configuration"
+              parent="menu_property_asset_root"
+              sequence="100"
+              groups="property_asset_management.group_property_asset_manager"/>
+
+    <menuitem id="menu_config_property_type"
+              name="Property Types"
+              parent="menu_configuration"
+              action="action_property_type"
+              sequence="10"/>
+
+    <menuitem id="menu_config_asset_category"
+              name="Asset Categories"
+              parent="menu_configuration"
+              action="action_asset_category"
+              sequence="20"/>
+</odoo>

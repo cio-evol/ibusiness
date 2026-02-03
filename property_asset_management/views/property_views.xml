@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Tree View -->
+    <record id="view_property_property_tree" model="ir.ui.view">
+        <field name="name">property.property.tree</field>
+        <field name="model">property.property</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" decoration-warning="state == 'maintenance'" decoration-muted="state == 'inactive'">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="property_type_id"/>
+                <field name="parent_id" optional="show"/>
+                <field name="city" optional="show"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="asset_count"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'active'" decoration-warning="state == 'maintenance'" decoration-danger="state == 'inactive'"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Property Form View -->
+    <record id="view_property_property_form" model="ir.ui.view">
+        <field name="name">property.property.form</field>
+        <field name="model">property.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" string="Activate" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_maintenance" string="Maintenance" type="object" invisible="state not in ('active',)"/>
+                    <button name="action_activate" string="Reactivate" type="object" invisible="state not in ('maintenance', 'inactive')"/>
+                    <button name="action_deactivate" string="Deactivate" type="object" invisible="state != 'active'"/>
+                    <button name="action_draft" string="Set to Draft" type="object" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assets" type="object" class="oe_stat_button" icon="fa-cubes">
+                            <field name="asset_count" widget="statinfo" string="Assets"/>
+                        </button>
+                        <button name="action_view_children" type="object" class="oe_stat_button" icon="fa-sitemap" invisible="child_count == 0">
+                            <field name="child_count" widget="statinfo" string="Sub-Properties"/>
+                        </button>
+                        <button name="action_transfer_equipment" type="object" class="oe_stat_button" icon="fa-exchange" invisible="asset_count == 0">
+                            <span class="o_stat_text">Transfer Equipment</span>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Property Name"/>
+                        </h1>
+                        <h4>
+                            <field name="code" readonly="1"/>
+                        </h4>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="property_type_id"/>
+                            <field name="parent_id" domain="[('id', '!=', id)]"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="floor"/>
+                            <field name="room_number"/>
+                            <field name="area"/>
+                            <field name="capacity"/>
+                            <field name="acquisition_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Address" name="address">
+                            <group>
+                                <group>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="city"/>
+                                </group>
+                                <group>
+                                    <field name="state_id"/>
+                                    <field name="country_id"/>
+                                    <field name="zip"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Assets" name="assets">
+                            <field name="asset_assignment_ids" context="{'default_property_id': id}">
+                                <list decoration-muted="state == 'returned'" decoration-danger="state == 'cancelled'">
+                                    <field name="name"/>
+                                    <field name="asset_id"/>
+                                    <field name="asset_category_id"/>
+                                    <field name="assigned_to_id" widget="many2one_avatar_user"/>
+                                    <field name="assignment_date"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'assigned'" decoration-muted="state == 'returned'" decoration-danger="state == 'cancelled'"/>
+                                </list>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="total_asset_value" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Internal Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Property Kanban View -->
+    <record id="view_property_property_kanban" model="ir.ui.view">
+        <field name="name">property.property.kanban</field>
+        <field name="model">property.property</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="property_type_id"/>
+                <field name="state"/>
+                <field name="asset_count"/>
+                <field name="responsible_id"/>
+                <field name="image"/>
+                <templates>
+                    <t t-name="card">
+                        <aside>
+                            <field name="image" widget="image" class="rounded" options="{'preview_image': 'image'}"/>
+                        </aside>
+                        <main>
+                            <div class="d-flex justify-content-between">
+                                <field name="name" class="fw-bold fs-5"/>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'active': 'success', 'maintenance': 'warning', 'inactive': 'danger'}}"/>
+                            </div>
+                            <field name="code" class="text-muted"/>
+                            <div class="d-flex gap-2">
+                                <field name="property_type_id"/>
+                                <span class="badge bg-primary"><field name="asset_count"/> Assets</span>
+                            </div>
+                            <footer class="pt-2">
+                                <field name="responsible_id" widget="many2one_avatar_user"/>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Property Search View -->
+    <record id="view_property_property_search" model="ir.ui.view">
+        <field name="name">property.property.search</field>
+        <field name="model">property.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="property_type_id"/>
+                <field name="parent_id"/>
+                <field name="responsible_id"/>
+                <field name="city"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Active" name="active_state" domain="[('state', '=', 'active')]"/>
+                <filter string="Under Maintenance" name="maintenance" domain="[('state', '=', 'maintenance')]"/>
+                <filter string="Inactive" name="inactive_state" domain="[('state', '=', 'inactive')]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Type" name="property_type" context="{'group_by': 'property_type_id'}"/>
+                    <filter string="Parent Property" name="parent" context="{'group_by': 'parent_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Responsible" name="responsible" context="{'group_by': 'responsible_id'}"/>
+                    <filter string="City" name="group_city" context="{'group_by': 'city'}"/>
+                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Property Action -->
+    <record id="action_property_property" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">property.property</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_active_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first property
+            </p>
+            <p>
+                Properties can be buildings, meeting rooms, offices, or any physical space
+                where assets can be assigned.
+            </p>
+        </field>
+    </record>
+</odoo>

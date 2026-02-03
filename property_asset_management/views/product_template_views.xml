@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Product Template Form View for Assets -->
+    <record id="view_product_template_form_asset" model="ir.ui.view">
+        <field name="name">product.template.form.asset</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="before">
+                <page string="Asset Information" name="asset_info" invisible="not is_asset">
+                    <group>
+                        <group string="Asset Classification">
+                            <field name="asset_code" readonly="1"/>
+                            <field name="asset_category_id"/>
+                            <field name="serial_number"/>
+                            <field name="barcode_asset"/>
+                        </group>
+                        <group string="Brand/Model">
+                            <field name="brand"/>
+                            <field name="model_name"/>
+                            <field name="manufacturer_id"/>
+                            <field name="supplier_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Purchase Information">
+                            <field name="purchase_date"/>
+                            <field name="purchase_price"/>
+                            <field name="warranty_start_date"/>
+                            <field name="warranty_end_date"/>
+                            <field name="warranty_status" widget="badge" decoration-success="warranty_status == 'active'" decoration-danger="warranty_status == 'expired'" decoration-info="warranty_status == 'none'"/>
+                        </group>
+                        <group string="Depreciation">
+                            <field name="depreciation_years"/>
+                            <field name="salvage_value"/>
+                            <field name="current_value" widget="monetary"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Current Assignment">
+                            <field name="current_property_id"/>
+                            <field name="current_user_id" widget="many2one_avatar_user"/>
+                            <field name="asset_state" widget="badge" decoration-info="asset_state == 'new'" decoration-success="asset_state in ('in_use', 'available')" decoration-warning="asset_state in ('maintenance', 'repair')" decoration-danger="asset_state in ('disposed', 'lost')"/>
+                        </group>
+                        <group string="Maintenance">
+                            <field name="requires_maintenance"/>
+                            <field name="next_maintenance_date" invisible="not requires_maintenance"/>
+                        </group>
+                    </group>
+                    <group string="Documents">
+                        <field name="document_ids" widget="many2many_binary"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_asset"/>
+                    <label for="is_asset"/>
+                </span>
+                <span class="d-inline-block">
+                    <field name="is_property"/>
+                    <label for="is_property"/>
+                </span>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_assignments" type="object" class="oe_stat_button" icon="fa-exchange" invisible="not is_asset">
+                    <field name="assignment_count" widget="statinfo" string="Assignments"/>
+                </button>
+                <button name="action_view_maintenance" type="object" class="oe_stat_button" icon="fa-wrench" invisible="not is_asset">
+                    <field name="maintenance_count" widget="statinfo" string="Maintenance"/>
+                </button>
+            </xpath>
+            <!-- Add property type field if it's a property product -->
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="property_type_id" invisible="not is_property"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Asset-specific Product Template Tree View -->
+    <record id="view_product_template_tree_asset" model="ir.ui.view">
+        <field name="name">product.template.tree.asset</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list decoration-info="asset_state == 'new'" decoration-success="asset_state in ('in_use', 'available')" decoration-warning="asset_state in ('maintenance', 'repair')" decoration-danger="asset_state in ('disposed', 'lost')">
+                <field name="asset_code"/>
+                <field name="name"/>
+                <field name="asset_category_id"/>
+                <field name="serial_number" optional="show"/>
+                <field name="brand" optional="show"/>
+                <field name="model_name" optional="show"/>
+                <field name="current_property_id"/>
+                <field name="current_user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="purchase_date" optional="hide"/>
+                <field name="current_value" widget="monetary" optional="show"/>
+                <field name="warranty_status" widget="badge" decoration-success="warranty_status == 'active'" decoration-danger="warranty_status == 'expired'" optional="show"/>
+                <field name="next_maintenance_date" optional="hide"/>
+                <field name="asset_state" widget="badge" decoration-info="asset_state == 'new'" decoration-success="asset_state in ('in_use', 'available')" decoration-warning="asset_state in ('maintenance', 'repair')" decoration-danger="asset_state in ('disposed', 'lost')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Asset Kanban View -->
+    <record id="view_product_template_kanban_asset" model="ir.ui.view">
+        <field name="name">product.template.kanban.asset</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="asset_code"/>
+                <field name="asset_category_id"/>
+                <field name="asset_state"/>
+                <field name="current_property_id"/>
+                <field name="current_value"/>
+                <field name="image_128"/>
+                <templates>
+                    <t t-name="card">
+                        <aside>
+                            <field name="image_128" widget="image" class="rounded"/>
+                        </aside>
+                        <main>
+                            <div class="d-flex justify-content-between">
+                                <field name="name" class="fw-bold"/>
+                                <field name="asset_state" widget="label_selection" options="{'classes': {'new': 'info', 'in_use': 'success', 'available': 'success', 'maintenance': 'warning', 'repair': 'warning', 'disposed': 'danger', 'lost': 'danger'}}"/>
+                            </div>
+                            <field name="asset_code" class="text-muted"/>
+                            <field name="asset_category_id"/>
+                            <div t-if="record.current_property_id.value">
+                                <i class="fa fa-map-marker"/> <field name="current_property_id"/>
+                            </div>
+                            <footer class="pt-2">
+                                <field name="current_value" widget="monetary"/>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Asset Search View -->
+    <record id="view_product_template_search_asset" model="ir.ui.view">
+        <field name="name">product.template.search.asset</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="asset_code"/>
+                <field name="serial_number"/>
+                <field name="asset_category_id"/>
+                <field name="brand"/>
+                <field name="current_property_id"/>
+                <field name="current_user_id"/>
+                <separator/>
+                <filter string="New" name="new" domain="[('asset_state', '=', 'new')]"/>
+                <filter string="In Use" name="in_use" domain="[('asset_state', '=', 'in_use')]"/>
+                <filter string="Available" name="available" domain="[('asset_state', '=', 'available')]"/>
+                <filter string="Under Maintenance" name="maintenance" domain="[('asset_state', '=', 'maintenance')]"/>
+                <filter string="Disposed" name="disposed" domain="[('asset_state', '=', 'disposed')]"/>
+                <separator/>
+                <filter string="Warranty Active" name="warranty_active" domain="[('warranty_status', '=', 'active')]"/>
+                <filter string="Warranty Expired" name="warranty_expired" domain="[('warranty_status', '=', 'expired')]"/>
+                <separator/>
+                <filter string="Maintenance Due" name="maintenance_due" domain="[('next_maintenance_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Assets" name="is_asset" domain="[('is_asset', '=', True)]"/>
+                <group>
+                    <filter string="Category" name="category" context="{'group_by': 'asset_category_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'asset_state'}"/>
+                    <filter string="Property" name="property" context="{'group_by': 'current_property_id'}"/>
+                    <filter string="Brand" name="brand" context="{'group_by': 'brand'}"/>
+                    <filter string="Warranty Status" name="warranty" context="{'group_by': 'warranty_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Action -->
+    <record id="action_product_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('is_asset', '=', True)]</field>
+        <field name="context">{'default_is_asset': True, 'default_detailed_type': 'product', 'default_tracking': 'serial'}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_product_template_tree_asset')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_product_template_kanban_asset')}),
+            (0, 0, {'view_mode': 'form'})]"/>
+        <field name="search_view_id" ref="view_product_template_search_asset"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first asset
+            </p>
+            <p>
+                Assets are trackable items like monitors, projectors, computers, furniture, etc.
+                that can be assigned to properties.
+            </p>
+        </field>
+    </record>
+
+    <!-- Quick Assignment Action -->
+    <record id="action_asset_quick_assign" model="ir.actions.act_window">
+        <field name="name">Quick Assign</field>
+        <field name="res_model">asset.assignment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
