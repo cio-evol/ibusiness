@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Assets Report Template -->
+    <template id="report_property_assets">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Property Assets Report</h2>
+                        <h3><t t-esc="doc.display_name"/></h3>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Property Type:</strong> <t t-esc="doc.property_type_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Status:</strong> <t t-esc="doc.state"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <strong>Responsible:</strong> <t t-esc="doc.responsible_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Company:</strong> <t t-esc="doc.company_id.name"/>
+                            </div>
+                        </div>
+
+                        <t t-if="doc.street or doc.city">
+                            <div class="row mt-2">
+                                <div class="col-12">
+                                    <strong>Address:</strong>
+                                    <t t-esc="doc.street"/> <t t-if="doc.street2"><t t-esc="doc.street2"/></t>
+                                    <t t-if="doc.city"><t t-esc="doc.city"/></t>
+                                    <t t-if="doc.state_id"><t t-esc="doc.state_id.name"/></t>
+                                    <t t-if="doc.zip"><t t-esc="doc.zip"/></t>
+                                    <t t-if="doc.country_id"><t t-esc="doc.country_id.name"/></t>
+                                </div>
+                            </div>
+                        </t>
+
+                        <h4 class="mt-4">Assigned Assets</h4>
+                        <t t-set="active_assignments" t-value="doc.asset_assignment_ids.filtered(lambda a: a.state == 'assigned')"/>
+                        <t t-if="active_assignments">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Code</th>
+                                        <th>Asset Name</th>
+                                        <th>Category</th>
+                                        <th>Serial Number</th>
+                                        <th>Assigned To</th>
+                                        <th>Assignment Date</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="active_assignments" t-as="assignment">
+                                        <tr>
+                                            <td><t t-esc="assignment.asset_id.asset_code"/></td>
+                                            <td><t t-esc="assignment.asset_id.name"/></td>
+                                            <td><t t-esc="assignment.asset_id.asset_category_id.name"/></td>
+                                            <td><t t-esc="assignment.asset_id.serial_number or '-'"/></td>
+                                            <td><t t-esc="assignment.assigned_to_id.name or '-'"/></td>
+                                            <td><t t-esc="assignment.assignment_date" t-options='{"widget": "date"}'/></td>
+                                            <td><t t-esc="assignment.asset_id.current_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6" class="text-end"><strong>Total Value:</strong></td>
+                                        <td><strong><t t-esc="doc.total_asset_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <p class="text-muted">No assets currently assigned to this property.</p>
+                        </t>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <strong>Total Assets:</strong> <t t-esc="doc.asset_count"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Total Asset Value:</strong> <t t-esc="doc.total_asset_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12 text-muted">
+                                <small>Report generated on <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Asset Report Template -->
+    <template id="report_asset">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-if="doc.is_asset">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Asset Report</h2>
+                            <h3><t t-esc="doc.name"/></h3>
+
+                            <div class="row mt-4">
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Asset Code:</strong></td>
+                                            <td><t t-esc="doc.asset_code"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Category:</strong></td>
+                                            <td><t t-esc="doc.asset_category_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Serial Number:</strong></td>
+                                            <td><t t-esc="doc.serial_number or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Brand:</strong></td>
+                                            <td><t t-esc="doc.brand or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Model:</strong></td>
+                                            <td><t t-esc="doc.model_name or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Status:</strong></td>
+                                            <td><t t-esc="doc.asset_state"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Purchase Date:</strong></td>
+                                            <td><t t-esc="doc.purchase_date" t-options='{"widget": "date"}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Purchase Price:</strong></td>
+                                            <td><t t-esc="doc.purchase_price" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Current Value:</strong></td>
+                                            <td><t t-esc="doc.current_value" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Warranty Status:</strong></td>
+                                            <td><t t-esc="doc.warranty_status"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Current Location:</strong></td>
+                                            <td><t t-esc="doc.current_property_id.name or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Current User:</strong></td>
+                                            <td><t t-esc="doc.current_user_id.name or '-'"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <h4 class="mt-4">Assignment History</h4>
+                            <t t-if="doc.assignment_ids">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Reference</th>
+                                            <th>Property</th>
+                                            <th>Assigned To</th>
+                                            <th>Assignment Date</th>
+                                            <th>Return Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.assignment_ids" t-as="assignment">
+                                            <tr>
+                                                <td><t t-esc="assignment.name"/></td>
+                                                <td><t t-esc="assignment.property_id.name"/></td>
+                                                <td><t t-esc="assignment.assigned_to_id.name or '-'"/></td>
+                                                <td><t t-esc="assignment.assignment_date" t-options='{"widget": "date"}'/></td>
+                                                <td><t t-esc="assignment.actual_return_date" t-options='{"widget": "date"}'/></td>
+                                                <td><t t-esc="assignment.state"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted">No assignment history.</p>
+                            </t>
+
+                            <h4 class="mt-4">Maintenance History</h4>
+                            <t t-if="doc.maintenance_ids">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Reference</th>
+                                            <th>Type</th>
+                                            <th>Scheduled Date</th>
+                                            <th>Completion Date</th>
+                                            <th>Technician</th>
+                                            <th>Cost</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.maintenance_ids" t-as="maintenance">
+                                            <tr>
+                                                <td><t t-esc="maintenance.name"/></td>
+                                                <td><t t-esc="maintenance.maintenance_type"/></td>
+                                                <td><t t-esc="maintenance.scheduled_date" t-options='{"widget": "date"}'/></td>
+                                                <td><t t-esc="maintenance.completion_date" t-options='{"widget": "date"}'/></td>
+                                                <td><t t-esc="maintenance.technician_id.name or '-'"/></td>
+                                                <td><t t-esc="maintenance.cost" t-options='{"widget": "monetary", "display_currency": maintenance.currency_id}'/></td>
+                                                <td><t t-esc="maintenance.state"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted">No maintenance history.</p>
+                            </t>
+
+                            <div class="row mt-4">
+                                <div class="col-12 text-muted">
+                                    <small>Report generated on <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Assignment Report Template -->
+    <template id="report_assignment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Asset Assignment Form</h2>
+                        <h3><t t-esc="doc.name"/></h3>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <h5>Asset Information</h5>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Asset Code:</strong></td>
+                                        <td><t t-esc="doc.asset_id.asset_code"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Asset Name:</strong></td>
+                                        <td><t t-esc="doc.asset_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Category:</strong></td>
+                                        <td><t t-esc="doc.asset_id.asset_category_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Serial Number:</strong></td>
+                                        <td><t t-esc="doc.asset_id.serial_number or '-'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Condition:</strong></td>
+                                        <td><t t-esc="doc.condition_on_assignment"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <h5>Assignment Details</h5>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Property:</strong></td>
+                                        <td><t t-esc="doc.property_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Assigned To:</strong></td>
+                                        <td><t t-esc="doc.assigned_to_id.name or '-'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Assigned By:</strong></td>
+                                        <td><t t-esc="doc.assigned_by_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Assignment Date:</strong></td>
+                                        <td><t t-esc="doc.assignment_date" t-options='{"widget": "date"}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Expected Return:</strong></td>
+                                        <td><t t-esc="doc.expected_return_date" t-options='{"widget": "date"}'/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <t t-if="doc.assignment_notes">
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h5>Notes</h5>
+                                    <p><t t-esc="doc.assignment_notes"/></p>
+                                </div>
+                            </div>
+                        </t>
+
+                        <div class="row mt-5">
+                            <div class="col-6">
+                                <div class="border-top pt-2">
+                                    <strong>Assigned By Signature:</strong>
+                                    <div style="height: 60px;"></div>
+                                    <p><t t-esc="doc.assigned_by_id.name"/></p>
+                                    <p>Date: _________________</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border-top pt-2">
+                                    <strong>Recipient Signature:</strong>
+                                    <div style="height: 60px;"></div>
+                                    <p><t t-esc="doc.assigned_to_id.name or '_________________'"/></p>
+                                    <p>Date: _________________</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12 text-muted">
+                                <small>Document generated on <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
