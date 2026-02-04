@@ -12,7 +12,7 @@
         - Assets: Monitors, Projectors, Furniture, Equipment, etc.
         - Asset assignment to properties
         - Asset tracking and maintenance
-        - Property hierarchy (Buildings > Floors > Rooms)
+        - Property hierarchy (Buildings > Floors > Rooms) 
     """,
     'author': 'Advaccura',
     'website': 'https://www.advaccura.com',
