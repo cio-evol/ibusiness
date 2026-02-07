@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_pdc" model="ir.ui.view">
+        <field name="name">res.partner.form.pdc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page string="PDC Information" name="pdc_info" invisible="not is_company and not parent_id">
+                    <group>
+                        <group string="PDC Status">
+                            <field name="pdc_blocked"/>
+                            <field name="pdc_block_date" invisible="not pdc_blocked"/>
+                            <field name="pdc_blocked_by" invisible="not pdc_blocked"/>
+                        </group>
+                        <group string="Actions" invisible="not pdc_blocked">
+                            <button name="action_unblock_pdc" string="Unblock PDC" type="object" class="btn-warning" confirm="Are you sure you want to unblock PDC for this customer?"/>
+                        </group>
+                    </group>
+                    <field name="pdc_block_reason" invisible="not pdc_blocked" placeholder="Reason for blocking PDC transactions..."/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

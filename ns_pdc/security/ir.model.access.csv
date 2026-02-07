@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_pdc,access.account.pdc,model_account_pdc,base.group_user,1,1,1,1
+access_account_pdc_allocation,access.account.pdc.allocation,model_account_pdc_allocation,base.group_user,1,1,1,1
+access_account_deposit_wizard,access.account.deposit.wizard,model_account_deposit_wizard,base.group_user,1,1,1,1
+access_account_pdc_wizard_cheque,access.account.pdc.wizard.cheque,model_account_pdc_wizard_cheque,base.group_user,1,1,1,1
+access_account_pdc_wizard_cheque_line,access.account.pdc.wizard.cheque.line,model_account_pdc_wizard_cheque_line,base.group_user,1,1,1,1
+access_account_pdc_wizard_allocation,access.account.pdc.wizard.allocation,model_account_pdc_wizard_allocation,base.group_user,1,1,1,1
+access_account_pdc_handover_wizard,access.account.pdc.handover.wizard,model_account_pdc_handover_wizard,base.group_user,1,1,1,1
+access_account_pdc_handover_allocation,access.account.pdc.handover.allocation,model_account_pdc_handover_allocation,base.group_user,1,1,1,1
+access_account_pdc_handover_confirm,access.account.pdc.handover.confirm,model_account_pdc_handover_confirm,base.group_user,1,1,1,1
+access_account_pdc_handover_breakdown,access.account.pdc.handover.breakdown,model_account_pdc_handover_breakdown,base.group_user,1,1,1,1
+access_account_pdc_return_wizard,access.account.pdc.return.wizard,model_account_pdc_return_wizard,base.group_user,1,1,1,1
+access_account_pdc_allocation_wizard,access.account.pdc.allocation.wizard,model_account_pdc_allocation_wizard,base.group_user,1,1,1,1
+access_account_pdc_allocation_wizard_line,access.account.pdc.allocation.wizard.line,model_account_pdc_allocation_wizard_line,base.group_user,1,1,1,1
+access_account_pdc_reset_wizard,access.account.pdc.reset.wizard,model_account_pdc_reset_wizard,account.group_account_manager,1,1,1,1
+access_account_pdc_bulk_handover_wizard,access.account.pdc.bulk.handover.wizard,model_account_pdc_bulk_handover_wizard,account.group_account_manager,1,1,1,1
+access_account_pdc_bulk_handover_line,access.account.pdc.bulk.handover.line,model_account_pdc_bulk_handover_line,account.group_account_manager,1,1,1,1

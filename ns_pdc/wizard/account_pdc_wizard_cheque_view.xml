@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_pdc_wizard_cheque_form" model="ir.ui.view">
+        <field name="name">account.pdc.wizard.cheque.form</field>
+        <field name="model">account.pdc.wizard.cheque</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="move_type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="auto_confirm"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Cheques">
+                            <field name="cheque_line_ids">
+                                <list>
+                                    <field name="wizard_id" column_invisible="1"/>
+                                    <field name="partner_id" column_invisible="1"/>
+                                    <field name="chq_bank_id" required="1"/>
+                                    <field name="cheque_number" required="1"/>
+                                    <field name="cheque_date" required="1"/>
+                                    <field name="customer_bank_account"/>
+                                    <field name="hand_over_to"/>
+                                    <field name="use_manual_amount"/>
+                                    <field name="manual_amount" sum="Total PDC Amount" invisible="not use_manual_amount"/>
+                                    <field name="total_allocate" sum="Total" invisible="use_manual_amount"/>
+                                </list>
+
+                                <form>
+                                    <field name="wizard_id" invisible="1"/>
+                                    <field name="move_type" invisible="1"/>
+                                    <field name="partner_id" invisible="1"/>
+
+                                    <group>
+                                        <group>
+                                            <field name="chq_bank_id" required="1"/>
+                                            <field name="cheque_number" required="1"/>
+                                            <field name="customer_bank_account"/>
+                                        </group>
+                                        <group>
+                                            <field name="cheque_date" required="1"/>
+                                            <field name="hand_over_to"/>
+                                            <field name="use_manual_amount" string="Enter PDC Amount Manually"/>
+                                            <field name="manual_amount" invisible="not use_manual_amount" required="use_manual_amount"/>
+                                        </group>
+                                    </group>
+
+                                    <notebook>
+                                        <page string="Invoices" name="invoices" invisible="move_type != 'out_invoice'">
+                                            <div invisible="not use_manual_amount" class="alert alert-info" role="alert">
+                                                <strong>Manual Amount PDC:</strong> Invoice allocation is optional when using manual amount.
+                                            </div>
+                                            <field name="allocation_ids" required="move_type == 'out_invoice' and not use_manual_amount">
+                                                <list editable="bottom">
+                                                    <field name="invoice_id" required="parent.move_type == 'out_invoice'"
+                                                           domain="[('partner_id', '=', parent.partner_id), ('move_type', 'in', ['out_invoice', 'out_refund']), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                                                    <field name="amount"/>
+                                                    <field name="amount_allocate" required="parent.move_type == 'out_invoice'" sum="Total"/>
+                                                </list>
+                                            </field>
+                                        </page>
+
+                                        <page string="Bills" name="bills" invisible="move_type != 'in_invoice'">
+                                            <div invisible="not use_manual_amount" class="alert alert-info" role="alert">
+                                                <strong>Manual Amount PDC:</strong> Bill allocation is optional when using manual amount.
+                                            </div>
+                                            <field name="allocation_ids" required="move_type == 'in_invoice' and not use_manual_amount">
+                                                <list editable="bottom">
+                                                    <field name="invoice_id" required="parent.move_type == 'in_invoice'"
+                                                           domain="[('partner_id', '=', parent.partner_id), ('move_type', 'in', ['in_invoice', 'in_refund']), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                                                    <field name="amount"/>
+                                                    <field name="amount_allocate" required="parent.move_type == 'in_invoice'" sum="Total"/>
+                                                </list>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

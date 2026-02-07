@@ -1,0 +1,28 @@
+<odoo>
+
+    <record id="aged_receivable_report_total_pdc" model="account.report.column">
+        <field name="name">Total PDC Amount</field>
+        <field name="expression_label">total_pdc_amount</field>
+        <field name="figure_type">monetary</field>
+    </record>
+
+
+    <record id="account_reports.aged_receivable_report" model="account.report">
+        <field name="column_ids" eval="[
+            (4, ref('aged_receivable_report_total_pdc'))
+        ]"/>
+    </record>
+
+
+    <record id="aged_payble_report_total_pdc" model="account.report.column">
+        <field name="name">Total PDC Amount</field>
+        <field name="expression_label">total_pdc_amount</field>
+        <field name="figure_type">monetary</field>
+    </record>
+
+    <record id="account_reports.aged_payable_report" model="account.report">
+        <field name="column_ids" eval="[
+            (4, ref('aged_payble_report_total_pdc'))
+        ]"/>
+    </record>
+</odoo>
