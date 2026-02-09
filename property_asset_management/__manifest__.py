@@ -28,6 +28,8 @@
         'security/property_asset_security.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
+        'views/property_type_views.xml',
+        'views/property_views.xml',
         'views/product_template_views.xml',
         'views/asset_category_views.xml',
         'views/asset_assignment_views.xml',
