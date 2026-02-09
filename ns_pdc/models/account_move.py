@@ -11,15 +11,6 @@ class AccountMove(models.Model):
     account_pdc_count = fields.Integer(string='PDCs', compute='_compute_account_pdc_ids')
 
     total_pdc_amount = fields.Float(string='PDC Amount', compute='_compute_total_pdc_amount', store=True)
-    # Backward-compat for legacy views still referencing this flag
-    is_sale_installed = fields.Boolean(compute='_compute_is_sale_installed')
-
-    def _compute_is_sale_installed(self):
-        installed = bool(self.env['ir.module.module'].search(
-            [('name', '=', 'sale'), ('state', '=', 'installed')], limit=1
-        ))
-        for record in self:
-            record.is_sale_installed = installed
 
     @api.depends('account_pdc_allocation_id', 'account_pdc_allocation_id.amount_allocate')
     def _compute_total_pdc_amount(self):

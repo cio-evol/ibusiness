@@ -4,7 +4,7 @@
         <!-- PDC Unblock Manager Group -->
         <record id="group_pdc_unblock_manager" model="res.groups">
             <field name="name">PDC Unblock Manager</field>
-            <field name="privilege_id" ref="account.res_groups_privilege_accounting"/>
+            <field name="category_id" ref="base.module_category_accounting_accounting"/>
             <field name="comment">Users in this group can unblock customers from PDC restrictions</field>
             <field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
         </record>
