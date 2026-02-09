@@ -150,17 +150,15 @@
         <field name="name">account.pdc.search</field>
         <field name="model">account.pdc</field>
         <field name="arch" type="xml">
-            <search>
+            <search string="Search PDC">
                 <field name="cheque_number" string="Number"/>
                 <field name="reference"/>
                 <field name="cheque_date" string="Date"/>
-                <separator/>
                 <filter name="filter_deposited" string="Deposited" domain="[('state', '=', 'deposited')]"/>
                 <filter name="filter_realized" string="Realized" domain="[('state', '=', 'realized')]"/>
                 <filter name="filter_return" string="Returned" domain="[('state', '=', 'return')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="State" name="group_state" context="{'group_by':'state'}"/>
-                </group>
+                <separator/>
+                <filter string="State" name="group_state" domain="[]" context="{'group_by':'state'}"/>
             </search>
         </field>
     </record>

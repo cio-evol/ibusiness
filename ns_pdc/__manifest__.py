@@ -1,10 +1,9 @@
 {
     'name': 'Post-Dated Cheque Management',
     'version': '19.0.1.0',
-    'icon': '/ns_pdc/static/description/icon.jpeg',
     'sequence': 15,
     'category': 'Accounting/Accounting',
-    'author': 'Nerosoft Solutions',
+    'author': 'Advacurra Solutions',
     'website': 'https://nerosoftsolutions.com/',
     'summary': 'Manage Post Dated Cheque Process',
     'description': """Manage Post Dated Cheque Process""",
@@ -16,8 +15,6 @@
         'views/account_journal_view.xml',
         'views/acount_move_view.xml',
         'views/account_pdc_view.xml',
-        # 'views/account_payment_view.xml',  # Commented out due to view inheritance issues
-        # 'views/age_receiable_report.xml',
         'views/res_partner_view.xml',
         'wizard/account_pdc_wizard_cheque_view.xml',
         'wizard/account_deposit_wizard_view.xml',
