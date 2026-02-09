@@ -13,17 +13,11 @@
               sequence="10"/>
 
     <menuitem id="menu_property_property"
-              name="All Properties"
+              name="Properties"
               parent="menu_property"
-              action="action_property_property"
+              action="action_property_category_property_only"
               sequence="10"/>
 
-    <menuitem id="menu_property_type"
-              name="Property Types"
-              parent="menu_property"
-              action="action_property_type"
-              sequence="20"
-              groups="property_asset_management.group_property_asset_officer"/>
 
     <!-- Assets Menu -->
     <menuitem id="menu_asset"
@@ -102,11 +96,6 @@
               sequence="50"
               groups="property_asset_management.group_property_asset_officer"/>
 
-    <menuitem id="menu_report_property_asset"
-              name="Property Assets Report"
-              parent="menu_reporting"
-              action="action_report_property_asset"
-              sequence="10"/>
 
     <!-- Configuration Menu -->
     <menuitem id="menu_configuration"
@@ -114,12 +103,6 @@
               parent="menu_property_asset_root"
               sequence="100"
               groups="property_asset_management.group_property_asset_manager"/>
-
-    <menuitem id="menu_config_property_type"
-              name="Property Types"
-              parent="menu_configuration"
-              action="action_property_type"
-              sequence="10"/>
 
     <menuitem id="menu_config_asset_category"
               name="Asset Categories"

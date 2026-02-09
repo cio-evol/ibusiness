@@ -1,105 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Property Assets Report Template -->
-    <template id="report_property_assets">
-        <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="doc">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <h2>Property Assets Report</h2>
-                        <h3><t t-esc="doc.display_name"/></h3>
-
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <strong>Property Type:</strong> <t t-esc="doc.property_type_id.name"/>
-                            </div>
-                            <div class="col-6">
-                                <strong>Status:</strong> <t t-esc="doc.state"/>
-                            </div>
-                        </div>
-
-                        <div class="row mt-2">
-                            <div class="col-6">
-                                <strong>Responsible:</strong> <t t-esc="doc.responsible_id.name"/>
-                            </div>
-                            <div class="col-6">
-                                <strong>Company:</strong> <t t-esc="doc.company_id.name"/>
-                            </div>
-                        </div>
-
-                        <t t-if="doc.street or doc.city">
-                            <div class="row mt-2">
-                                <div class="col-12">
-                                    <strong>Address:</strong>
-                                    <t t-esc="doc.street"/> <t t-if="doc.street2"><t t-esc="doc.street2"/></t>
-                                    <t t-if="doc.city"><t t-esc="doc.city"/></t>
-                                    <t t-if="doc.state_id"><t t-esc="doc.state_id.name"/></t>
-                                    <t t-if="doc.zip"><t t-esc="doc.zip"/></t>
-                                    <t t-if="doc.country_id"><t t-esc="doc.country_id.name"/></t>
-                                </div>
-                            </div>
-                        </t>
-
-                        <h4 class="mt-4">Assigned Assets</h4>
-                        <t t-set="active_assignments" t-value="doc.asset_assignment_ids.filtered(lambda a: a.state == 'assigned')"/>
-                        <t t-if="active_assignments">
-                            <table class="table table-sm table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Asset Code</th>
-                                        <th>Asset Name</th>
-                                        <th>Category</th>
-                                        <th>Serial Number</th>
-                                        <th>Assigned To</th>
-                                        <th>Assignment Date</th>
-                                        <th>Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="active_assignments" t-as="assignment">
-                                        <tr>
-                                            <td><t t-esc="assignment.asset_id.asset_code"/></td>
-                                            <td><t t-esc="assignment.asset_id.name"/></td>
-                                            <td><t t-esc="assignment.asset_id.asset_category_id.name"/></td>
-                                            <td><t t-esc="assignment.asset_id.serial_number or '-'"/></td>
-                                            <td><t t-esc="assignment.assigned_to_id.name or '-'"/></td>
-                                            <td><t t-esc="assignment.assignment_date" t-options='{"widget": "date"}'/></td>
-                                            <td><t t-esc="assignment.asset_id.current_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></td>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="6" class="text-end"><strong>Total Value:</strong></td>
-                                        <td><strong><t t-esc="doc.total_asset_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/></strong></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </t>
-                        <t t-else="">
-                            <p class="text-muted">No assets currently assigned to this property.</p>
-                        </t>
-
-                        <div class="row mt-4">
-                            <div class="col-6">
-                                <strong>Total Assets:</strong> <t t-esc="doc.asset_count"/>
-                            </div>
-                            <div class="col-6">
-                                <strong>Total Asset Value:</strong> <t t-esc="doc.total_asset_value" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
-                            </div>
-                        </div>
-
-                        <div class="row mt-4">
-                            <div class="col-12 text-muted">
-                                <small>Report generated on <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></small>
-                            </div>
-                        </div>
-                    </div>
-                </t>
-            </t>
-        </t>
-    </template>
-
     <!-- Asset Report Template -->
     <template id="report_asset">
         <t t-call="web.html_container">
@@ -159,7 +59,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>Current Location:</strong></td>
-                                            <td><t t-esc="doc.current_property_id.name or '-'"/></td>
+                                            <td><t t-esc="doc.current_property_category_id.name or '-'"/></td>
                                         </tr>
                                         <tr>
                                             <td><strong>Current User:</strong></td>
@@ -186,7 +86,7 @@
                                         <t t-foreach="doc.assignment_ids" t-as="assignment">
                                             <tr>
                                                 <td><t t-esc="assignment.name"/></td>
-                                                <td><t t-esc="assignment.property_id.name"/></td>
+                                                <td><t t-esc="assignment.property_category_id.name"/></td>
                                                 <td><t t-esc="assignment.assigned_to_id.name or '-'"/></td>
                                                 <td><t t-esc="assignment.assignment_date" t-options='{"widget": "date"}'/></td>
                                                 <td><t t-esc="assignment.actual_return_date" t-options='{"widget": "date"}'/></td>
@@ -285,7 +185,7 @@
                                 <table class="table table-sm">
                                     <tr>
                                         <td><strong>Property:</strong></td>
-                                        <td><t t-esc="doc.property_id.name"/></td>
+                                        <td><t t-esc="doc.property_category_id.name"/></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Assigned To:</strong></td>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_pdc_reset_wizard_form" model="ir.ui.view">
+        <field name="name">account.pdc.reset.wizard.form</field>
+        <field name="model">account.pdc.reset.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reset PDC to Draft">
+                <div class="alert alert-warning" role="alert" style="margin-bottom:20px;">
+                    <strong><i class="fa fa-warning"/> WARNING:</strong> This action will reset the PDC to draft state and cancel all related allocations and handover breakdowns. This action cannot be undone.
+                </div>
+
+                <sheet>
+                    <group>
+                        <group string="PDC Information">
+                            <field name="pdc_id" invisible="1"/>
+                            <field name="pdc_name" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="current_state" readonly="1"/>
+                            <field name="amount" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Impact Analysis">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <group>
+                                    <field name="allocation_count" readonly="1"/>
+                                    <field name="handover_breakdown_count" readonly="1"/>
+                                </group>
+                            </div>
+                            <div class="col-md-6">
+                                <group>
+                                    <field name="payment_count" readonly="1"/>
+                                    <field name="journal_entry_count" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+                    </group>
+
+                    <group string="Warning Details" invisible="not warning_message">
+                        <field name="warning_message" readonly="1" nolabel="1"
+                               widget="text" class="text-danger"
+                               style="white-space: pre-line; font-family: monospace; background-color: #fff3cd; padding: 10px; border-left: 4px solid #ffc107;"/>
+                    </group>
+
+                    <group string="Reset Confirmation" class="mt16">
+                        <field name="reset_reason" placeholder="Please provide a detailed reason for resetting this PDC to draft state..." required="1"/>
+                        <field name="confirm_reset" widget="boolean_toggle"
+                               string="I understand the implications and want to proceed with reset"/>
+                    </group>
+
+                    <div invisible="not confirm_reset" class="alert alert-info mt16" role="alert" style="margin-bottom: 0;">
+                        <p><strong>What will happen when you click 'Reset to Draft':</strong></p>
+                        <ul class="mb-0">
+                            <li>PDC state will be changed to 'Draft'</li>
+                            <li>All invoice allocations will be cancelled and deleted</li>
+                            <li>All handover breakdowns will be cancelled and deleted</li>
+                            <li>Process-specific fields (deposit date, realization date, handover info) will be cleared</li>
+                            <li>All linked payments (regular and handover) will be CANCELLED</li>
+                            <li>Journal entries will remain for audit trail but require manual review</li>
+                            <li>All actions will be logged in the PDC chatter for audit purposes</li>
+                        </ul>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button name="action_reset_to_draft" type="object"
+                            class="btn-primary" string="Reset to Draft"
+                            confirm="Are you sure you want to reset this PDC to draft? This action cannot be undone."
+                            invisible="not confirm_reset"/>
+                    <button name="action_cancel" type="object"
+                            class="btn-secondary" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

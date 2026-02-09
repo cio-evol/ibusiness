@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherited_ns_pdc" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited.ns.pdc</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="is_chq_payment" invisible="1"/>
+                <group string="PDC Information" name="pdc" invisible="not is_chq_payment" colspan="2">
+                    <group>
+                        <field name="chq_bank_id" readonly="state != 'draft'"/>
+                        <field name="chq_number" readonly="state != 'draft'"/>
+                        <field name="chq_date" readonly="state != 'draft'"/>
+                    </group>
+                    <group>
+                        <field name="bank_account_number" invisible="not bank_account_number" readonly="state != 'draft'"/>
+                        <field name="deposit_date" invisible="not deposit_date" readonly="state != 'draft'"/>
+                        <field name="handed_over_to_partner" readonly="state != 'draft'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

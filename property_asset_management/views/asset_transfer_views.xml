@@ -43,7 +43,7 @@
                             <field name="source_property_id" readonly="state != 'draft'"/>
                         </group>
                         <group string="Destination">
-                            <field name="destination_property_id" readonly="state != 'draft'" domain="[('id', '!=', source_property_id), ('state', '=', 'active')]"/>
+                            <field name="destination_property_id" readonly="state != 'draft'" domain="[('id', '!=', source_property_id), ('sync_property', '=', True)]"/>
                         </group>
                     </group>
                     <group>
@@ -59,7 +59,7 @@
                         <page string="Equipment to Transfer" name="lines">
                             <field name="transfer_line_ids" readonly="state not in ('draft', 'confirmed')">
                                 <list editable="bottom">
-                                    <field name="asset_id" domain="[('is_asset', '=', True), ('current_property_id', '=', parent.source_property_id)]"/>
+                                    <field name="asset_id" domain="[('is_asset', '=', True), ('current_property_category_id', '=', parent.source_property_id)]"/>
                                     <field name="asset_code" readonly="1"/>
                                     <field name="asset_category_id" readonly="1"/>
                                     <field name="source_property_id" readonly="1" optional="hide"/>

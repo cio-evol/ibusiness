@@ -24,18 +24,18 @@ class AssetTransfer(models.Model):
         tracking=True,
     )
     source_property_id = fields.Many2one(
-        'property.property',
-        string='From Property/Room',
+        'product.category',
+        string='From Property',
         required=True,
         tracking=True,
-        domain=[('state', '=', 'active')],
+        domain=[('sync_property', '=', True)],
     )
     destination_property_id = fields.Many2one(
-        'property.property',
-        string='To Property/Room',
+        'product.category',
+        string='To Property',
         required=True,
         tracking=True,
-        domain=[('state', '=', 'active')],
+        domain=[('sync_property', '=', True)],
     )
     transfer_line_ids = fields.One2many(
         'asset.transfer.line',
@@ -95,7 +95,7 @@ class AssetTransfer(models.Model):
             for line in record.transfer_line_ids:
                 active_assignment = self.env['asset.assignment'].search([
                     ('asset_id', '=', line.asset_id.id),
-                    ('property_id', '=', record.source_property_id.id),
+                    ('property_category_id', '=', record.source_property_id.id),
                     ('state', '=', 'assigned'),
                 ], limit=1)
                 if not active_assignment:
@@ -124,7 +124,7 @@ class AssetTransfer(models.Model):
                 # Create new assignment at destination
                 new_assignment = self.env['asset.assignment'].create({
                     'asset_id': line.asset_id.id,
-                    'property_id': record.destination_property_id.id,
+                    'property_category_id': record.destination_property_id.id,
                     'assigned_to_id': record.transferred_by_id.id,
                     'assignment_date': record.transfer_date,
                     'assignment_notes': _('Transferred from %s via %s') % (
@@ -171,7 +171,7 @@ class AssetTransferLine(models.Model):
         'product.template',
         string='Equipment',
         required=True,
-        domain="[('is_asset', '=', True), ('current_property_id', '=', parent.source_property_id)]",
+        domain="[('is_asset', '=', True), ('current_property_category_id', '=', parent.source_property_id)]",
     )
     asset_code = fields.Char(
         related='asset_id.asset_code',

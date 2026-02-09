@@ -10,7 +10,7 @@
                 <field name="asset_id"/>
                 <field name="asset_code"/>
                 <field name="maintenance_type"/>
-                <field name="property_id" optional="show"/>
+                <field name="property_category_id" optional="show"/>
                 <field name="scheduled_date"/>
                 <field name="completion_date" optional="show"/>
                 <field name="technician_id" widget="many2one_avatar_user"/>
@@ -47,7 +47,7 @@
                             <field name="asset_id" readonly="state != 'draft'"/>
                             <field name="asset_code"/>
                             <field name="asset_category_id"/>
-                            <field name="property_id"/>
+                            <field name="property_category_id"/>
                         </group>
                         <group string="Maintenance Details">
                             <field name="maintenance_type" readonly="state not in ('draft', 'scheduled')"/>
@@ -179,7 +179,7 @@
             <list decoration-info="state == 'draft'" decoration-warning="state == 'submitted'" decoration-success="state in ('approved', 'maintenance_created')" decoration-danger="state == 'rejected'">
                 <field name="name"/>
                 <field name="asset_id"/>
-                <field name="property_id"/>
+                <field name="property_category_id"/>
                 <field name="requested_by_id" widget="many2one_avatar_user"/>
                 <field name="request_date"/>
                 <field name="priority" widget="priority"/>
@@ -210,7 +210,7 @@
                     <group>
                         <group>
                             <field name="asset_id" readonly="state != 'draft'"/>
-                            <field name="property_id"/>
+                            <field name="property_category_id"/>
                             <field name="priority" widget="priority"/>
                         </group>
                         <group>

@@ -14,11 +14,11 @@ class AssetAssignmentWizard(models.TransientModel):
         domain=[('is_asset', '=', True), ('asset_state', 'in', ['new', 'available'])],
         required=True,
     )
-    property_id = fields.Many2one(
-        'property.property',
+    property_category_id = fields.Many2one(
+        'product.category',
         string='Property',
         required=True,
-        domain=[('state', '=', 'active')],
+        domain=[('sync_property', '=', True)],
     )
     assigned_to_id = fields.Many2one(
         'res.users',
@@ -50,7 +50,7 @@ class AssetAssignmentWizard(models.TransientModel):
         for asset in self.asset_ids:
             assignment = self.env['asset.assignment'].create({
                 'asset_id': asset.id,
-                'property_id': self.property_id.id,
+                'property_category_id': self.property_category_id.id,
                 'assigned_to_id': self.assigned_to_id.id if self.assigned_to_id else False,
                 'assignment_date': self.assignment_date,
                 'expected_return_date': self.expected_return_date,

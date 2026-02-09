@@ -14,20 +14,10 @@ class ProductTemplate(models.Model):
         default=False,
         help='Check if this product is a trackable asset',
     )
-    is_property = fields.Boolean(
-        string='Is a Property',
-        default=False,
-        help='Check if this product represents a property (building, room, etc.)',
-    )
     asset_category_id = fields.Many2one(
         'asset.category',
         string='Asset Category',
         help='Category of the asset for classification',
-    )
-    property_type_id = fields.Many2one(
-        'property.type',
-        string='Property Type',
-        help='Type of property if this is a property product',
     )
 
     # Asset Identification
@@ -97,8 +87,8 @@ class ProductTemplate(models.Model):
     ], string='Asset Status', default='new', tracking=True)
 
     # Assignment
-    current_property_id = fields.Many2one(
-        'property.property',
+    current_property_category_id = fields.Many2one(
+        'product.category',
         string='Current Property',
         compute='_compute_current_assignment',
         store=True,
@@ -181,7 +171,9 @@ class ProductTemplate(models.Model):
             current_assignment = record.assignment_ids.filtered(
                 lambda a: a.state == 'assigned'
             )[:1]
-            record.current_property_id = current_assignment.property_id.id if current_assignment else False
+            record.current_property_category_id = (
+                current_assignment.property_category_id.id if current_assignment else False
+            )
             record.current_user_id = current_assignment.assigned_to_id.id if current_assignment else False
 
     @api.depends('assignment_ids')
@@ -231,13 +223,7 @@ class ProductTemplate(models.Model):
     @api.onchange('is_asset')
     def _onchange_is_asset(self):
         if self.is_asset:
-            self.is_property = False
             self.tracking = 'serial'
-
-    @api.onchange('is_property')
-    def _onchange_is_property(self):
-        if self.is_property:
-            self.is_asset = False
 
     @api.model_create_multi
     def create(self, vals_list):

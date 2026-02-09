@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import property_type
-from . import property_property
+from . import product_category
 from . import asset_category
 from . import product_template
 from . import asset_assignment

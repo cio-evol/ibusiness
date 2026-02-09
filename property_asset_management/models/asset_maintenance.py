@@ -33,8 +33,8 @@ class AssetMaintenance(models.Model):
         string='Asset Category',
         store=True,
     )
-    property_id = fields.Many2one(
-        'property.property',
+    property_category_id = fields.Many2one(
+        'product.category',
         string='Property',
         compute='_compute_property_id',
         store=True,
@@ -154,10 +154,10 @@ class AssetMaintenance(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code('asset.maintenance') or _('New')
         return super().create(vals_list)
 
-    @api.depends('asset_id', 'asset_id.current_property_id')
+    @api.depends('asset_id', 'asset_id.current_property_category_id')
     def _compute_property_id(self):
         for record in self:
-            record.property_id = record.asset_id.current_property_id
+            record.property_category_id = record.asset_id.current_property_category_id
 
     def action_schedule(self):
         self.write({'state': 'scheduled'})
@@ -181,7 +181,7 @@ class AssetMaintenance(models.Model):
             ])
             if not other_maintenance:
                 # Check if asset has active assignment
-                if record.asset_id.current_property_id:
+                if record.asset_id.current_property_category_id:
                     record.asset_id.write({'asset_state': 'in_use'})
                 else:
                     record.asset_id.write({'asset_state': 'available'})
@@ -196,7 +196,7 @@ class AssetMaintenance(models.Model):
                     ('id', '!=', record.id),
                 ])
                 if not other_maintenance:
-                    if record.asset_id.current_property_id:
+                    if record.asset_id.current_property_category_id:
                         record.asset_id.write({'asset_state': 'in_use'})
                     else:
                         record.asset_id.write({'asset_state': 'available'})
@@ -225,10 +225,10 @@ class AssetMaintenanceRequest(models.Model):
         required=True,
         domain=[('is_asset', '=', True)],
     )
-    property_id = fields.Many2one(
-        'property.property',
+    property_category_id = fields.Many2one(
+        'product.category',
         string='Property',
-        related='asset_id.current_property_id',
+        related='asset_id.current_property_category_id',
         store=True,
     )
     requested_by_id = fields.Many2one(

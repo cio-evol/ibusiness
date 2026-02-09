@@ -38,7 +38,7 @@
                     </group>
                     <group>
                         <group string="Current Assignment">
-                            <field name="current_property_id"/>
+                            <field name="current_property_category_id"/>
                             <field name="current_user_id" widget="many2one_avatar_user"/>
                             <field name="asset_state" widget="badge" decoration-info="asset_state == 'new'" decoration-success="asset_state in ('in_use', 'available')" decoration-warning="asset_state in ('maintenance', 'repair')" decoration-danger="asset_state in ('disposed', 'lost')"/>
                         </group>
@@ -57,10 +57,6 @@
                     <field name="is_asset"/>
                     <label for="is_asset"/>
                 </span>
-                <span class="d-inline-block">
-                    <field name="is_property"/>
-                    <label for="is_property"/>
-                </span>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="action_view_assignments" type="object" class="oe_stat_button" icon="fa-exchange" invisible="not is_asset">
@@ -69,10 +65,6 @@
                 <button name="action_view_maintenance" type="object" class="oe_stat_button" icon="fa-wrench" invisible="not is_asset">
                     <field name="maintenance_count" widget="statinfo" string="Maintenance"/>
                 </button>
-            </xpath>
-            <!-- Add property type field if it's a property product -->
-            <xpath expr="//field[@name='categ_id']" position="after">
-                <field name="property_type_id" invisible="not is_property"/>
             </xpath>
         </field>
     </record>
@@ -89,7 +81,7 @@
                 <field name="serial_number" optional="show"/>
                 <field name="brand" optional="show"/>
                 <field name="model_name" optional="show"/>
-                <field name="current_property_id"/>
+                <field name="current_property_category_id"/>
                 <field name="current_user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="purchase_date" optional="hide"/>
                 <field name="current_value" widget="monetary" optional="show"/>
@@ -111,7 +103,7 @@
                 <field name="asset_code"/>
                 <field name="asset_category_id"/>
                 <field name="asset_state"/>
-                <field name="current_property_id"/>
+                <field name="current_property_category_id"/>
                 <field name="current_value"/>
                 <field name="image_128"/>
                 <templates>
@@ -126,8 +118,8 @@
                             </div>
                             <field name="asset_code" class="text-muted"/>
                             <field name="asset_category_id"/>
-                            <div t-if="record.current_property_id.value">
-                                <i class="fa fa-map-marker"/> <field name="current_property_id"/>
+                            <div t-if="record.current_property_category_id.value">
+                                <i class="fa fa-map-marker"/> <field name="current_property_category_id"/>
                             </div>
                             <footer class="pt-2">
                                 <field name="current_value" widget="monetary"/>
@@ -150,7 +142,7 @@
                 <field name="serial_number"/>
                 <field name="asset_category_id"/>
                 <field name="brand"/>
-                <field name="current_property_id"/>
+                <field name="current_property_category_id"/>
                 <field name="current_user_id"/>
                 <separator/>
                 <filter string="New" name="new" domain="[('asset_state', '=', 'new')]"/>
@@ -168,7 +160,7 @@
                 <group>
                     <filter string="Category" name="category" context="{'group_by': 'asset_category_id'}"/>
                     <filter string="Status" name="status" context="{'group_by': 'asset_state'}"/>
-                    <filter string="Property" name="property" context="{'group_by': 'current_property_id'}"/>
+                    <filter string="Property" name="property" context="{'group_by': 'current_property_category_id'}"/>
                     <filter string="Brand" name="brand" context="{'group_by': 'brand'}"/>
                     <filter string="Warranty Status" name="warranty" context="{'group_by': 'warranty_status'}"/>
                 </group>

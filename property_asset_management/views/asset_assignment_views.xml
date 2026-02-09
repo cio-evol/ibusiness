@@ -10,8 +10,7 @@
                 <field name="asset_id"/>
                 <field name="asset_code"/>
                 <field name="asset_category_id" optional="show"/>
-                <field name="property_id"/>
-                <field name="property_type_id" optional="show"/>
+                <field name="property_category_id"/>
                 <field name="assigned_to_id" widget="many2one_avatar_user"/>
                 <field name="assignment_date"/>
                 <field name="expected_return_date" optional="show"/>
@@ -50,8 +49,7 @@
                             <field name="asset_category_id"/>
                         </group>
                         <group string="Assignment Details">
-                            <field name="property_id" readonly="state != 'draft'"/>
-                            <field name="property_type_id"/>
+                            <field name="property_category_id" readonly="state != 'draft'"/>
                             <field name="assigned_to_id" widget="many2one_avatar_user"/>
                             <field name="assigned_by_id" widget="many2one_avatar_user"/>
                             <field name="company_id" groups="base.group_multi_company"/>
@@ -100,7 +98,7 @@
                 <field name="name"/>
                 <field name="asset_id"/>
                 <field name="asset_code"/>
-                <field name="property_id"/>
+                <field name="property_category_id"/>
                 <field name="assigned_to_id"/>
                 <separator/>
                 <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
@@ -115,8 +113,7 @@
                 <group>
                     <filter string="Asset" name="asset" context="{'group_by': 'asset_id'}"/>
                     <filter string="Asset Category" name="category" context="{'group_by': 'asset_category_id'}"/>
-                    <filter string="Property" name="property" context="{'group_by': 'property_id'}"/>
-                    <filter string="Property Type" name="property_type" context="{'group_by': 'property_type_id'}"/>
+                    <filter string="Property" name="property" context="{'group_by': 'property_category_id'}"/>
                     <filter string="Assigned To" name="assigned_to" context="{'group_by': 'assigned_to_id'}"/>
                     <filter string="Status" name="status" context="{'group_by': 'state'}"/>
                     <filter string="Assignment Date" name="assignment_date" context="{'group_by': 'assignment_date:month'}"/>
@@ -133,7 +130,7 @@
             <kanban default_group_by="state" sample="1">
                 <field name="name"/>
                 <field name="asset_id"/>
-                <field name="property_id"/>
+                <field name="property_category_id"/>
                 <field name="assigned_to_id"/>
                 <field name="state"/>
                 <field name="assignment_date"/>
@@ -146,7 +143,7 @@
                             <i class="fa fa-cube"/> <field name="asset_id"/>
                         </div>
                         <div>
-                            <i class="fa fa-building"/> <field name="property_id"/>
+                            <i class="fa fa-building"/> <field name="property_category_id"/>
                         </div>
                         <div class="text-muted">
                             <field name="assignment_date"/>
@@ -184,7 +181,7 @@
             <form>
                 <group>
                     <group>
-                        <field name="property_id"/>
+                        <field name="property_category_id"/>
                         <field name="assigned_to_id"/>
                         <field name="assignment_date"/>
                         <field name="expected_return_date"/>

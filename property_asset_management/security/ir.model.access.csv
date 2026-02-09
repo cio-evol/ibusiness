@@ -1,10 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_property_type_user,property.type.user,model_property_type,group_property_asset_user,1,0,0,0
-access_property_type_officer,property.type.officer,model_property_type,group_property_asset_officer,1,1,1,0
-access_property_type_manager,property.type.manager,model_property_type,group_property_asset_manager,1,1,1,1
-access_property_property_user,property.property.user,model_property_property,group_property_asset_user,1,0,0,0
-access_property_property_officer,property.property.officer,model_property_property,group_property_asset_officer,1,1,1,0
-access_property_property_manager,property.property.manager,model_property_property,group_property_asset_manager,1,1,1,1
 access_asset_category_user,asset.category.user,model_asset_category,group_property_asset_user,1,0,0,0
 access_asset_category_officer,asset.category.officer,model_asset_category,group_property_asset_officer,1,1,1,0
 access_asset_category_manager,asset.category.manager,model_asset_category,group_property_asset_manager,1,1,1,1

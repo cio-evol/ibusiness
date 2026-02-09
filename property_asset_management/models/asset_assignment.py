@@ -34,16 +34,12 @@ class AssetAssignment(models.Model):
         string='Asset Category',
         store=True,
     )
-    property_id = fields.Many2one(
-        'property.property',
+    property_category_id = fields.Many2one(
+        'product.category',
         string='Property',
         required=True,
         tracking=True,
-    )
-    property_type_id = fields.Many2one(
-        related='property_id.property_type_id',
-        string='Property Type',
-        store=True,
+        domain=[('sync_property', '=', True)],
     )
     assigned_to_id = fields.Many2one(
         'res.users',
@@ -141,7 +137,7 @@ class AssetAssignment(models.Model):
                     raise ValidationError(
                         _('Asset "%s" is already assigned to property "%s". '
                           'Please return it first before assigning to a new property.') %
-                        (record.asset_id.name, existing[0].property_id.name)
+                        (record.asset_id.name, existing[0].property_category_id.name)
                     )
 
     @api.constrains('expected_return_date', 'assignment_date')
@@ -205,6 +201,6 @@ class AssetAssignment(models.Model):
     def name_get(self):
         result = []
         for record in self:
-            name = f"{record.name} - {record.asset_id.name} @ {record.property_id.name}"
+            name = f"{record.name} - {record.asset_id.name} @ {record.property_category_id.name}"
             result.append((record.id, name))
         return result
