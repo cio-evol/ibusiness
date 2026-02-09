@@ -11,6 +11,12 @@ class ProductCategory(models.Model):
         default=False,
         help='If enabled, treat this product category as a property.',
     )
+    property_id = fields.Many2one(
+        'property.property',
+        string='Property',
+        ondelete='set null',
+        index=True,
+    )
     asset_assignment_ids = fields.One2many(
         'asset.assignment',
         'property_category_id',
