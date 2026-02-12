@@ -6,3 +6,5 @@ from . import product_template
 from . import asset_assignment
 from . import asset_maintenance
 from . import asset_transfer
+from . import property_type
+from . import property_property

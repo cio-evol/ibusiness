@@ -41,6 +41,14 @@ class AssetAssignment(models.Model):
         tracking=True,
         domain=[('sync_property', '=', True)],
     )
+    property_id = fields.Many2one(
+        'property.property',
+        string='Property (Model)',
+        related='property_category_id.property_id',
+        store=True,
+        index=True,
+        readonly=True,
+    )
     assigned_to_id = fields.Many2one(
         'res.users',
         string='Assigned To',

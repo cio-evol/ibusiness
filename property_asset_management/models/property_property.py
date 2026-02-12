@@ -235,13 +235,16 @@ class PropertyProperty(models.Model):
 
     def action_view_assets(self):
         self.ensure_one()
+        default_ctx = {'default_property_id': self.id}
+        if self.product_category_id:
+            default_ctx['default_property_category_id'] = self.product_category_id.id
         return {
             'name': _('Assets'),
             'type': 'ir.actions.act_window',
             'res_model': 'asset.assignment',
             'view_mode': 'list,form',
             'domain': [('property_id', '=', self.id)],
-            'context': {'default_property_id': self.id},
+            'context': default_ctx,
         }
 
     def action_view_children(self):
