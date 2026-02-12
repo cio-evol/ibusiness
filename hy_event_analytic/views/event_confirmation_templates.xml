@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Inherit registration_ticket_access template to hide/show download ticket button -->
+        <template id="registration_ticket_access_hide_show" inherit_id="website_event.registration_ticket_access">
+            <xpath expr="//div[@class='row mb-2 o_wevent_registration_ticket_access']" position="attributes">
+                <attribute name="t-if">event and event.show_ticket_calendar_buttons</attribute>
+            </xpath>
+        </template>
+
+        <!-- Inherit event_calendar_links template to hide/show add to calendar buttons -->
+        <template id="event_calendar_links_hide_show" inherit_id="website_event.event_calendar_links">
+            <xpath expr="//div[@id='add_to_calendar']" position="attributes">
+                <attribute name="t-if">event and event.show_ticket_calendar_buttons</attribute>
+            </xpath>
+            <xpath expr="//h5[text()='Add to your calendar']" position="attributes">
+                <attribute name="t-if">event and event.show_ticket_calendar_buttons</attribute>
+            </xpath>
+        </template>
+
+        <!-- Inherit modal ticket registration template to hide/show seat count -->
+        <template id="modal_ticket_registration_hide_seat_count" inherit_id="website_event.modal_ticket_registration">
+            <!-- Hide seat count text next to Register button - replace t-if condition to include show_seat_count check -->
+            <xpath expr="//t[@t-if='event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)']" position="attributes">
+                <attribute name="t-if">event.show_seat_count and event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)</attribute>
+            </xpath>
+            
+            <!-- Hide quantity selector container in multi-ticket view (includes selector and max text) -->
+            <xpath expr="//div[@t-if='(not ticket.is_expired and ticket.sale_available and max_input_value) or seats_available_slot_ticket']" position="attributes">
+                <attribute name="t-if">event.show_quantity_selector and ((not ticket.is_expired and ticket.sale_available and max_input_value) or seats_available_slot_ticket)</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
+

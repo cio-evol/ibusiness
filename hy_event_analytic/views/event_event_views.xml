@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Inherit event.event form view to add event_type field -->
+        <record id="view_event_form_inherit_hy_event_analytic" model="ir.ui.view">
+            <field name="name">event.event.form.inherit.hy.event.analytic</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='event_type_id']" position="after">
+                    <field name="event_type"/>
+                    <field name="allow_donations"/>
+                    <field name="payment_strategy" invisible="not allow_donations"/>
+                    <field name="show_ticket_calendar_buttons"/>
+                    <field name="show_seat_count"/>
+                    <field name="show_quantity_selector"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+
