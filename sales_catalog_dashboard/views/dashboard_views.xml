@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kanban View -->
+    <record id="view_product_template_kanban_dashboard" model="ir.ui.view">
+        <field name="name">product.template.kanban.dashboard</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" create="0" delete="0" edit="0">
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-12">
+                                    <!-- Ribbon for Booked Status -->
+                                    <field name="is_booked_today" invisible="1"/>
+                                    <div class="ribbon ribbon-top-right" invisible="not is_booked_today">
+                                        <span class="bg-danger">Booked</span>
+                                    </div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <div>Price: <field name="list_price"/></div>
+                                    <div>Ref: <field name="default_code"/></div>
+                                    <field name="categ_id"/>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <field name="image_128" widget="image" class="oe_avatar"/>
+                                </div>
+                            </div>
+                            <!-- Custom Tags logic if applicable -->
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                   <field name="type"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="currency_id" invisible="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_product_template_form_dashboard" model="ir.ui.view">
+        <field name="name">product.template.form.dashboard</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <form string="Product Dashboard" create="0" delete="0" edit="0">
+                <header>
+                    <button name="action_field_visit" type="object" string="Field Visit" class="btn-primary"/>
+                    <button name="action_help_desk" type="object" string="Help Desk" class="btn-secondary"/>
+                    <button name="action_maintain" type="object" string="Maintain" class="btn-secondary"/>
+                    
+                    <button name="action_check_in" type="object" string="Check In"/>
+                    <button name="action_check_out" type="object" string="Check out"/>
+                    <button name="action_sign_agreement" type="object" string="Sign Agreement"/>
+                    <button name="action_asset_allocations" type="object" string="Asset Allocations"/>
+                    <button name="action_parking_allocations" type="object" string="Parking Allocations"/>
+                </header>
+                <sheet>
+                    <field name="x_has_ongoing_booking" invisible="1"/>
+                    <div class="ribbon ribbon-top-right" invisible="not x_has_ongoing_booking">
+                        <span class="bg-success text-white fw-bold" style="font-size: 13px !important; white-space: nowrap !important; z-index: 10;">
+                            <field name="x_current_booking_so"/>
+                        </span>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_website_url" type="object" class="oe_stat_button" icon="fa-globe" string="Go To Website">
+                        </button>
+                        <button name="action_open_product_profile" type="object" class="oe_stat_button" icon="fa-user" string="Profile">
+                        </button>
+                        <button name="%(calendar.action_calendar_event)d" type="action" class="oe_stat_button" icon="fa-calendar" string="Calendar">
+                        </button>
+                        <button name="action_open_documents" type="object" class="oe_stat_button" icon="fa-file-text" string="Documents">
+                        </button>
+                        <button name="action_view_rental_schedule" type="object" class="oe_stat_button" icon="fa-tasks" string="Schedule">
+                        </button>
+                    </div>
+
+                    <div class="container-fluid">
+                        <!-- Top Row: Product Name -->
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="name" string="Product Name"/>
+                                <h1>
+                                    <field name="name" placeholder="Product Name"/>
+                                </h1>
+                            </div>
+                        </div>
+
+                        <!-- Middle Row: Charts and Image -->
+                        <!-- Middle Row: Charts and Image -->
+                        <div class="row mb-4">
+                            <!-- Col 1: Stacked Graph (Rental Analysis) -->
+                            <!-- Col 1: Stacked Graph (Rental Analysis) -->
+                            <div class="col-4 p-3 border">
+                                <div class="o_label mb-2"><strong>Rental Analysis (Stacked)</strong></div>
+                                <field name="dashboard_rental_graph_data" widget="sales_catalog_dashboard_graph" graph_type="bar"/>
+                            </div>
+
+                            <!-- Col 2: Pie Chart (Rental State Distribution) -->
+                            <div class="col-4 p-3 border">
+                                <div class="o_label mb-2"><strong>Rental Status (Pie)</strong></div>
+                                <field name="dashboard_rental_graph_data" widget="sales_catalog_dashboard_graph" graph_type="pie"/>
+                            </div>
+
+                            <!-- Col 3: Product Image -->
+                            <div class="col-4 p-3 border text-center position-relative">
+                                <!-- <div class="o_label mb-2"><strong>Product Image</strong></div> -->
+                                <div class="o_dashboard_image_container d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <field name="image_1920" widget="image" class="img-fluid oe_avatar_large" 
+                                           style="max-height: 250px; width: auto;" 
+                                           options="{'preview_image': 'image_128'}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Row: Stats -->
+                        <div class="row mb-3">
+                            <!-- Revenue -->
+                            <div class="col-3">
+                                <div class="border p-3 text-center bg-light">
+                                    <h3><field name="dashboard_revenue" widget="monetary" options="{'currency_field': 'currency_id'}"/></h3>
+                                    <span>Revenue</span>
+                                </div>
+                            </div>
+                            <!-- Cost -->
+                            <div class="col-3">
+                                <div class="border p-3 text-center bg-light">
+                                    <h3><field name="dashboard_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/></h3>
+                                    <span>Cost</span>
+                                </div>
+                            </div>
+                            <!-- Profit -->
+                            <div class="col-3">
+                                <div class="border p-3 text-center bg-light">
+                                    <h3><field name="dashboard_profit" widget="monetary" options="{'currency_field': 'currency_id'}"/></h3>
+                                    <span>Profit</span>
+                                </div>
+                            </div>
+                            <!-- Current Owner -->
+                            <div class="col-3">
+                                <div class="border p-3 text-center bg-light">
+                                    <h4><field name="current_owner_id" readonly="1"/></h4>
+                                    <span>Current Owner</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Fields -->
+                        <field name="currency_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="dashboard_section_id" invisible="1"/>
+                        <field name="priority" invisible="1"/>
+                    </div>
+
+                    <!-- Notebook -->
+                    <notebook>
+                        <page string="List of Assets" name="assets">
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                        <page string="Payments" name="payments">
+                            <field name="product_payment_ids" readonly="1">
+                                <list string="Payments">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="journal_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount" sum="Total Amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Parking Slots" name="parking_slots">
+                        </page>
+                        <page string="Rentals" name="rentals">
+                            <field name="product_rental_history_ids" readonly="1">
+                                <list string="Rental History">
+                                    <field name="order_id" widget="many2one" string="Rental Reference"/>
+                                    <field name="order_partner_id" string="Customer"/>
+                                    <field name="start_date" string="Start Date"/>
+                                    <field name="return_date" string="End Date"/>
+                                    <field name="rental_status" string="Status" widget="badge" 
+                                           decoration-info="rental_status == 'pickup'" 
+                                           decoration-warning="rental_status == 'return'" 
+                                           decoration-success="rental_status == 'returned'"/>
+                                    <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
+                                    <field name="price_total" string="Total Amount" optional="show"/>
+                                    <field name="state" invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Maintenance History" name="maintenance_history">
+                            <field name="product_maintenance_ids" readonly="1">
+                                <list string="Maintenance">
+                                    <field name="name"/>
+                                    <field name="equipment_id"/>
+                                    <field name="user_id" string="Technician"/>
+                                    <field name="stage_id"/>
+                                    <field name="request_date"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Invoices" name="invoices">
+                             <field name="product_invoice_ids" readonly="1">
+                                <list string="Invoices">
+                                    <field name="move_id" string="Invoice"/>
+                                    <field name="partner_id"/>
+                                    <field name="date"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal" sum="Total"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Sales Orders" name="sales_orders">
+                            <field name="product_sale_order_ids" readonly="1">
+                                <list string="Sales Orders">
+                                    <field name="order_id" string="Order" widget="many2one"/>
+                                    <field name="order_partner_id" string="Customer"/>
+                                    <field name="create_date" string="Date"/>
+                                    <field name="product_uom_qty" string="Quantity"/>
+                                    <field name="price_unit" string="Price"/>
+                                    <field name="price_subtotal" sum="Total"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Bills" name="bills">
+                            <field name="product_vendor_bill_ids" readonly="1">
+                                <list string="Vendor Bills">
+                                    <field name="move_id" string="Bill"/>
+                                    <field name="partner_id" string="Vendor"/>
+                                    <field name="date"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+<!--                 <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids"/>-->
+<!--                    <field name="activity_ids"/>-->
+<!--                    <field name="message_ids"/>-->
+<!--                </div>-->
+            </form>
+        </field>
+    </record>
+
+
+
+    <!-- Search View -->
+    <record id="view_product_template_search_dashboard" model="ir.ui.view">
+        <field name="name">product.template.search.dashboard</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <search string="Product Search">
+                <field name="name"/>
+                <field name="categ_id"/>
+                <field name="default_code" string="Reference"/>
+                <field name="product_variant_ids" string="Variants"/>
+                <filter string="Category" name="categ_id" context="{'group_by':'categ_id'}"/>
+                <searchpanel>
+                    <field name="dashboard_section_id" string="SECTIONS" icon="fa-folder" enable_counters="1" select="multi"/>
+                    <field name="categ_id" string="CATEGORIES" icon="fa-th-list" enable_counters="1" hierarchize="1"/>
+                    <field name="product_attribute_ids" string="VARIANTS" icon="fa-cubes" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- List View -->
+    <record id="view_product_template_tree_dashboard" model="ir.ui.view">
+        <field name="name">product.template.list.dashboard</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Product Catalog" sample="1" multi_edit="1" create="0" delete="0" edit="0">
+                <field name="priority" widget="priority" optional="show" readonly="1"/>
+                <field name="name"/>
+                <field name="default_code" optional="show"/>
+                <field name="dashboard_section_id" optional="show"/>
+                <field name="categ_id" optional="show"/>
+                <field name="list_price" optional="show"/>
+                <field name="standard_price" optional="hide"/>
+                <field name="uom_id" optional="hide"/>
+                <field name="type" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_sales_catalog_dashboard" model="ir.actions.act_window">
+        <field name="name">Sales Catalog Dashboard</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('categ_id.visible_on_sales_catalog', '=', True)]</field>
+        <field name="search_view_id" ref="view_product_template_search_dashboard"/>
+        <field name="view_id" ref="view_product_template_kanban_dashboard"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create your first Product in the Catalog Dashboard!
+          </p>
+        </field>
+    </record>
+    
+    <!-- View Actions Mapping -->
+    <record id="action_sales_catalog_dashboard_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_product_template_kanban_dashboard"/>
+        <field name="act_window_id" ref="action_sales_catalog_dashboard"/>
+    </record>
+    
+    <record id="action_sales_catalog_dashboard_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_template_form_dashboard"/>
+        <field name="act_window_id" ref="action_sales_catalog_dashboard"/>
+    </record>
+
+    <record id="action_sales_catalog_dashboard_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_product_template_tree_dashboard"/>
+        <field name="act_window_id" ref="action_sales_catalog_dashboard"/>
+    </record>
+
+</odoo>

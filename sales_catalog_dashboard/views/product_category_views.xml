@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Product Category Form View -->
+    <record id="view_product_category_form_inherit_sales_catalog" model="ir.ui.view">
+        <field name="name">product.category.form.inherit.sales.catalog</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="visible_on_sales_catalog"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
