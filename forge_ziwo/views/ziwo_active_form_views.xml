@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <!--? Form view -->
+        <record model="ir.ui.view" id="forge_ziwo_active_form_form_view">
+            <field name="name">Ziwo Active Form</field>
+            <field name="model">ziwo.active.form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="action" readonly="1" force_save="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--? List view -->
+        <record model="ir.ui.view" id="forge_ziwo_active_form_tree_view">
+            <field name="name">Ziwo Active Form</field>
+            <field name="model">ziwo.active.form</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="model_id"/>
+                    <field name="action"/>
+                </list>
+            </field>
+        </record>
+
+        <!--? Window Action -->
+        <record id="forge_ziwo_active_form_action" model="ir.actions.act_window">
+            <field name="name">Active Forms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ziwo.active.form</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="forge_ziwo_active_form_tree_view"/>
+        </record>
+    </data>
+</odoo>
