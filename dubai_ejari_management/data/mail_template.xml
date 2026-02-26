@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="email_template_ejari_expiry" model="mail.template">
+        <field name="name">Ejari Expiry Notification</field>
+        <field name="model_id" ref="model_ejari_record"/>
+        <field name="subject">Ejari ${object.name} expiring on ${object.expiry_date}</field>
+        <field name="email_from">${(object.company_id.email or 'noreply@example.com')|safe}</field>
+        <field name="email_to">${object.tenant_partner_id.email or ''}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html"><![CDATA[
+<div>
+    <p>Dear ${object.tenant_partner_id.name or 'Tenant'},</p>
+    <p>
+        This is a reminder that the Ejari <strong>${object.name}</strong>
+        for property <strong>${object.property_ref or ''}</strong>
+        is ${'expired' if object.expired_flag else 'expiring soon'} on
+        <strong>${object.expiry_date}</strong>.
+    </p>
+    <p>
+        Please contact the property management team if you need further information.
+    </p>
+    <p>Best regards,<br/>
+       ${object.company_id.name}</p>
+</div>
+        ]]></field>
+    </record>
+</odoo>

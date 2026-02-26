@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Ejari list and selection under Display Name on Sales Catalog Dashboard product form (product.product) -->
+    <record id="view_product_product_form_dashboard_inherit_ejari" model="ir.ui.view">
+        <field name="name">product.product.form.dashboard.ejari</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="sales_catalog_dashboard.view_product_template_form_dashboard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='container-fluid']/div[contains(@class,'row')][1]" position="after">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label for="ejari_selected_id" string="Selected Ejari"/>
+                        <field name="ejari_selected_id" options="{'no_create': True}" domain="[('property_product_tmpl_id', '=', product_tmpl_id)]"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

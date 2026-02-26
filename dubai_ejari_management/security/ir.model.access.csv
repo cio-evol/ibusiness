@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ejari_record_user,access_ejari_record_user,model_ejari_record,dubai_ejari_management.group_ejari_user,1,0,1,0
+access_ejari_record_manager,access_ejari_record_manager,model_ejari_record,dubai_ejari_management.group_ejari_manager,1,1,1,1
+access_ejari_renew_wizard_user,access_ejari_renew_wizard_user,model_ejari_renew_wizard,dubai_ejari_management.group_ejari_user,1,1,1,1
+access_ejari_renew_wizard_manager,access_ejari_renew_wizard_manager,model_ejari_renew_wizard,dubai_ejari_management.group_ejari_manager,1,1,1,1

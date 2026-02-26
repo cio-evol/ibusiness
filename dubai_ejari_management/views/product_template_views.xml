@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_product_template_form_inherit_ejari" model="ir.ui.view">
+        <field name="name">product.template.form.ejari</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//sheet" position="before">
+                <div invisible="not ejari_ribbon" class="mb-2">
+                    <span class="badge text-bg-success" invisible="ejari_status != 'active'">
+                        <field name="ejari_ribbon" readonly="1" nolabel="1"/>
+                    </span>
+                    <span class="badge text-bg-warning" invisible="ejari_status != 'expiring_soon'">
+                        <field name="ejari_ribbon" readonly="1" nolabel="1"/>
+                    </span>
+                    <span class="badge text-bg-danger" invisible="ejari_status != 'expired'">
+                        <field name="ejari_ribbon" readonly="1" nolabel="1"/>
+                    </span>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_ejari_records" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Ejari</span>
+                        <field name="ejari_count" widget="statinfo"/>
+                    </div>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Ejari" name="ejari">
+                    <group>
+                        <field name="ejari_selected_id" string="Selected Ejari" domain="[('property_product_tmpl_id', '=', id)]"/>
+                    </group>
+                    <field name="ejari_record_ids" nolabel="1">
+                        <list string="Ejari Records" create="0" delete="0" editable="bottom">
+                            <field name="name"/>
+                            <field name="ejari_number"/>
+                            <field name="tenant_partner_id"/>
+                            <field name="expiry_date"/>
+                            <field name="days_to_expire"/>
+                            <field name="status"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

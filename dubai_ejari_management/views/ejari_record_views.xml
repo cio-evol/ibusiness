@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_ejari_record" model="ir.actions.act_window">
+        <field name="name">Ejari</field>
+        <field name="res_model">ejari.record</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Ejari records to manage tenancy registrations for your properties.
+            </p>
+        </field>
+    </record>
+
+<!--    <menuitem id="menu_ejari_root" name="Property / Rental" sequence="20" groups="dubai_ejari_management.group_ejari_user"/>-->
+
+    <menuitem id="menu_ejari"
+              name="Ejari"
+              parent="sales_catalog_dashboard.menu_sales_catalog_dashboard_root"
+              action="action_ejari_record"
+              sequence="10"
+              groups="dubai_ejari_management.group_ejari_user"/>
+
+    <record id="view_ejari_record_tree" model="ir.ui.view">
+        <field name="name">ejari.record.tree</field>
+        <field name="model">ejari.record</field>
+        <field name="arch" type="xml">
+            <list string="Ejari Records" decoration-danger="expired_flag" decoration-warning="expiring_flag">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="property_ref"/>
+                <field name="tenant_partner_id"/>
+                <field name="ejari_number"/>
+                <field name="contract_start_date"/>
+                <field name="contract_end_date"/>
+                <field name="expiry_date"/>
+                <field name="days_to_expire"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ejari_record_kanban" model="ir.ui.view">
+        <field name="name">ejari.record.kanban</field>
+        <field name="model">ejari.record</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="property_ref"/>
+                <field name="tenant_partner_id"/>
+                <field name="ejari_number"/>
+                <field name="expiry_date"/>
+                <field name="days_to_expire"/>
+                <field name="status"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="o_kanban_record_top">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="o_kanban_details">
+                                <div><span>Property:</span> <strong><field name="property_ref"/></strong></div>
+                                <div><span>Tenant:</span> <field name="tenant_partner_id"/></div>
+                                <div><span>Ejari #:</span> <field name="ejari_number"/></div>
+                                <div><span>Expiry:</span> <field name="expiry_date"/> (<field name="days_to_expire"/> days)</div>
+                                <div><span>Status:</span> <field name="status"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ejari_record_search" model="ir.ui.view">
+        <field name="name">ejari.record.search</field>
+        <field name="model">ejari.record</field>
+        <field name="arch" type="xml">
+            <search string="Search Ejari">
+                <field name="name"/>
+                <field name="ejari_number"/>
+                <field name="tenant_partner_id"/>
+                <field name="landlord_partner_id"/>
+                <field name="property_product_tmpl_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="active" string="Active" domain="[('status', '=', 'active')]"/>
+                <filter name="expiring_soon" string="Expiring Soon" domain="[('status', '=', 'expiring_soon')]"/>
+                <filter name="expired" string="Expired" domain="[('status', '=', 'expired')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('status', '=', 'cancelled')]"/>
+                <filter name="expiring_7" string="Expiring in 7 days" domain="[('status', 'in', ['active', 'expiring_soon']), ('days_to_expire', '&lt;=', 7), ('days_to_expire', '&gt;=', 0)]"/>
+                <filter name="expiring_15" string="Expiring in 15 days" domain="[('status', 'in', ['active', 'expiring_soon']), ('days_to_expire', '&lt;=', 15), ('days_to_expire', '&gt;=', 0)]"/>
+                <filter name="expiring_30" string="Expiring in 30 days" domain="[('status', 'in', ['active', 'expiring_soon']), ('days_to_expire', '&lt;=', 30), ('days_to_expire', '&gt;=', 0)]"/>
+                <group>
+                    <filter name="group_company" string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter name="group_property" string="Property" domain="[]" context="{'group_by': 'property_product_tmpl_id'}"/>
+                    <filter name="group_tenant" string="Tenant" domain="[]" context="{'group_by': 'tenant_partner_id'}"/>
+                    <filter name="group_status" string="Status" domain="[]" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ejari_record_form" model="ir.ui.view">
+        <field name="name">ejari.record.form</field>
+        <field name="model">ejari.record</field>
+        <field name="arch" type="xml">
+            <form string="Ejari">
+                <sheet>
+                    <header>
+                        <button name="action_submit" type="object" string="Submit" class="btn-primary" invisible="status != 'draft'"/>
+                        <button name="action_activate" type="object" string="Activate" class="btn-success" invisible="status not in ('draft', 'submitted', 'expiring_soon')"/>
+                        <button name="action_cancel" type="object" string="Cancel" class="btn-secondary" invisible="status == 'cancelled'"/>
+                        <field name="status" widget="statusbar" statusbar_visible="draft,submitted,active,expiring_soon,expired,cancelled"/>
+                    </header>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="property_product_tmpl_id"/>
+                            <field name="property_ref" readonly="1"/>
+                            <field name="tenant_partner_id"/>
+                            <field name="landlord_partner_id"/>
+                            <field name="ejari_number"/>
+                        </group>
+                        <group>
+                            <field name="contract_start_date"/>
+                            <field name="contract_end_date"/>
+                            <field name="issue_date"/>
+                            <field name="expiry_date" readonly="1"/>
+                            <field name="days_to_expire" readonly="1"/>
+                            <field name="expiring_flag" readonly="1"/>
+                            <field name="expired_flag" readonly="1"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                        <page string="Attachments">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>
+        </field>
+    </record>
+
+</odoo>
