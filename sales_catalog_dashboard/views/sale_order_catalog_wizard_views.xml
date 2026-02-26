@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_catalog_wizard_form" model="ir.ui.view">
+        <field name="name">sale.order.catalog.wizard.form</field>
+        <field name="model">sale.order.catalog.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add from Catalog">
+                <group>
+                    <field name="order_id" invisible="1"/>
+                    <field name="main_product_id" readonly="1"/>
+                </group>
+                <group string="Select items to add to order" colspan="2">
+                    <label for="selected_asset_allocation_ids" string="Assets"/>
+                    <field name="selected_asset_allocation_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}"/>
+                    <label for="selected_parking_allocation_ids" string="Parking"/>
+                    <field name="selected_parking_allocation_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}"/>
+                    <label for="selected_other_item_ids" string="Other products"/>
+                    <field name="selected_other_item_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}"/>
+                </group>
+                <footer>
+                    <button name="action_add_to_order" string="Add to Order" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

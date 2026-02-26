@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Template form: Property in options bar -->
+    <record id="product_template_form_view_inherit_dashboard" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.dashboard</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-flex ms-2">
+                    <field name="is_property"/>
+                    <label for="is_property"/>
+                </span>
+            </xpath>
+            <xpath expr="//page[@name='invoicing']" position="inside">
+                <group name="analytic_accounting" string="Analytic Accounting">
+                    <field name="x_analytic_account_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Product (variant) form: add Main Warehouse (visible when is_property) -->
+    <record id="product_product_form_view_inherit_dashboard" model="ir.ui.view">
+        <field name="name">product.product.form.inherit.dashboard</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_general']" position="inside">
+                <field name="x_warehouse_id" string="Main Warehouse" invisible="not is_property"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

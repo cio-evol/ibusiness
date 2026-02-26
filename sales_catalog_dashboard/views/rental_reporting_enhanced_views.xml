@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Inherit the rental report graph view to add sidebar with product widget -->
+    <!-- INVALID: Cannot replace <graph> root with <div> -->
+    <!--
+    <record id="view_sale_rental_report_graph_enhanced" model="ir.ui.view">
+        <field name="name">sale.rental.report.graph.enhanced</field>
+        <field name="model">sale.rental.report</field>
+        <field name="inherit_id" ref="sale_renting.rental_report_graph_view"/>
+        <field name="arch" type="xml">
+            <graph position="replace">
+                <div class="o_rental_reporting_layout">
+                    <div class="o_rental_reporting_main">
+                        <graph string="Rental Analysis" type="line" sample="1">
+                            <field name="date" interval="day"/>
+                            <field name="quantity" type="measure"/>
+                        </graph>
+                    </div>
+                    <div class="o_rental_reporting_sidebar">
+                        <div class="o_rental_reporting_widget_container">
+                            <field name="id" invisible="1"/>
+                            <field name="product_id" 
+                                   widget="rental_reporting_widget"
+                                   options="{'product_id_field': 'product_id'}"/>
+                        </div>
+                    </div>
+                </div>
+            </graph>
+        </field>
+    </record>
+    -->
+    
+    <!-- Custom view that combines graph with product widget sidebar -->
+    <!-- This view will be used when a product is selected/filtered -->
+    <record id="view_sale_rental_report_graph_with_widget" model="ir.ui.view">
+        <field name="name">sale.rental.report.graph.with.widget</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <form string="Rental Analysis with Product Details" create="0" edit="0">
+                <div class="o_rental_reporting_layout">
+                    <div class="o_rental_reporting_main">
+                        <graph string="Rental Analysis" type="line" sample="1">
+                            <field name="date" interval="day"/>
+                            <field name="quantity" type="measure"/>
+                        </graph>
+                    </div>
+                    <div class="o_rental_reporting_sidebar">
+                        <div class="o_rental_reporting_widget_container">
+                            <field name="id" invisible="1"/>
+                            <field name="product_id" 
+                                   widget="rental_reporting_widget"
+                                   options="{'product_id_field': 'product_id'}"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Inherit Search View to add Rental Status -->
+    <record id="rental_report_search_view_enhanced" model="ir.ui.view">
+        <field name="name">sale.rental.report.search.enhanced</field>
+        <field name="model">sale.rental.report</field>
+        <field name="inherit_id" ref="sale_renting.rental_report_search_view"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="rental_status"/>
+            </field>
+            <filter name="Product" position="after">
+                <filter string="Rental Status" name="group_by_rental_status" context="{'group_by':'rental_status'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Inherit the original rental report action to add the enhanced view as an option -->
+    <record id="action_rental_report" model="ir.actions.act_window">
+        <field name="name">Rental Analysis</field>
+        <field name="res_model">sale.rental.report</field>
+        <field name="view_mode">graph,pivot,form</field>
+        <field name="search_view_id" ref="sale_renting.rental_report_search_view"/>
+        <field name="context">{
+            'search_default_confirmed_orders': 1,
+            'group_by': [],
+            'search_default_filter_date': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>
+                Create a new rental order
+            </p>
+        </field>
+    </record>
+
+    <!-- Add form view mapping -->
+    <record id="action_rental_report_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_rental_report_graph_with_widget"/>
+        <field name="act_window_id" ref="action_rental_report"/>
+    </record>
+
+    <!-- Alternative: Create a separate action for enhanced view -->
+    <!-- Requested Graph View: Product on X-axis, Qty on Y-axis -->
+    <record id="view_sale_rental_report_graph_product" model="ir.ui.view">
+        <field name="name">sale.rental.report.graph.product</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <graph string="Rental Analysis" type="bar" sample="1" stacked="0">
+                <!-- X-axis: Product -->
+                <field name="product_id" type="row"/> 
+                <!-- Y-axis: Daily Ordered Qty -->
+                <field name="quantity" type="measure"/>
+                <!-- Alternate X-axis option availability implies generally just being able to group by it. 
+                     Adding it here doesn't make it an "alternate mode" button, but part of default grouping if supported.
+                     However, standard Odoo graph behavior allows changing grouping via search bar. 
+                     We stick to the requested default. -->
+            </graph>
+        </field>
+    </record>
+
+    <!-- Requested Pie Chart View: Rental Status distribution -->
+    <record id="view_sale_rental_report_graph_pie" model="ir.ui.view">
+        <field name="name">sale.rental.report.graph.pie</field>
+        <field name="model">sale.rental.report</field>
+        <field name="arch" type="xml">
+            <graph string="Rental Status" type="pie" sample="1">
+                <field name="rental_status"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Enhanced Action with Explicit Views -->
+    <record id="action_rental_report_enhanced" model="ir.actions.act_window">
+        <field name="name">Rental Analysis Enhanced</field>
+        <field name="res_model">sale.rental.report</field>
+        <field name="view_mode">graph,pivot,form</field>
+        <field name="search_view_id" ref="sale_renting.rental_report_search_view"/>
+        <field name="context">{
+            'search_default_confirmed_orders': 1,
+            'search_default_filter_date': 1,
+            'group_by': [],
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>
+                Create a new rental order. Filter by product to see product image and pie chart.
+            </p>
+        </field>
+    </record>
+
+    <!-- Explicit View Mappings for the Action -->
+    <record id="action_rental_report_enhanced_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_sale_rental_report_graph_product"/>
+        <field name="act_window_id" ref="action_rental_report_enhanced"/>
+    </record>
+
+    <record id="action_rental_report_enhanced_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_renting.rental_report_pivot_view"/>
+        <field name="act_window_id" ref="action_rental_report_enhanced"/>
+    </record>
+
+    <record id="action_rental_report_enhanced_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_rental_report_graph_with_widget"/>
+        <field name="act_window_id" ref="action_rental_report_enhanced"/>
+    </record>
+</odoo>
+

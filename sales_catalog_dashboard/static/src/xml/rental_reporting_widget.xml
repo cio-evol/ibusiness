@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sales_catalog_dashboard.RentalReportingWidget" owl="1">
+        <div class="o_rental_reporting_widget">
+            <t t-if="state and state.loading">
+                <div class="o_loading">
+                    <i class="fa fa-spinner fa-spin"/> Loading...
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_product_image_container">
+                    <t t-if="state and state.imageUrl">
+                        <img t-att-src="state.imageUrl" 
+                             t-att-alt="state.productName or ''"
+                             class="o_product_image_full"/>
+                    </t>
+                    <t t-else="">
+                        <div class="o_no_image">
+                            <i class="fa fa-image"/> No Image Available
+                        </div>
+                    </t>
+                </div>
+                <div class="o_product_name" t-if="state and state.productName">
+                    <strong><t t-esc="state.productName"/></strong>
+                </div>
+                <div class="o_line_chart_container">
+                    <t t-if="state and state.lineChartData and state.lineChartData.labels and state.lineChartData.labels.length > 0">
+                        <canvas t-ref="lineChartCanvas" class="o_line_chart_canvas"></canvas>
+                    </t>
+                    <t t-else="">
+                        <div class="o_no_data">
+                            <i class="fa fa-info-circle"/> No rental data available. Please filter by a product.
+                        </div>
+                    </t>
+                </div>
+                <div class="o_pie_chart_container">
+                    <t t-if="state and state.pieChartData and state.pieChartData.labels and state.pieChartData.labels.length > 0">
+                        <canvas t-ref="pieChartCanvas" class="o_pie_chart_canvas"></canvas>
+                    </t>
+                    <t t-else="">
+                        <div class="o_no_data">
+                            <i class="fa fa-info-circle"/> No status data available
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
+

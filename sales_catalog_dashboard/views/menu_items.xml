@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_sales_catalog_dashboard_root"
+              name="Catalog Dashboard"
+              sequence="10"
+              web_icon="sales_catalog_dashboard,static/description/icon.png"/>
+
+    <menuitem id="menu_sales_catalog_dashboard_main"
+              name="Dashboard"
+              parent="menu_sales_catalog_dashboard_root"
+              action="action_sales_catalog_dashboard"
+              sequence="1"/>
+
+    <menuitem id="menu_sales_catalog_rental_root"
+              name="Report"
+              parent="menu_sales_catalog_dashboard_root"
+              sequence="20"/>
+
+    <menuitem id="menu_sales_catalog_rental_reporting"
+              name="Reporting"
+              parent="menu_sales_catalog_rental_root"
+              action="action_rental_reporting"
+              sequence="10"/>
+
+    <menuitem id="menu_sales_catalog_asset_allocation"
+              name="Assets Allocation"
+              parent="menu_sales_catalog_dashboard_root"
+              action="action_sales_catalog_asset_allocation"
+              sequence="15"/>
+
+    <menuitem id="menu_sales_catalog_parking_allocation"
+              name="Parking Allocations"
+              parent="menu_sales_catalog_dashboard_root"
+              action="action_sales_catalog_parking_allocation"
+              sequence="16"/>
+</odoo>

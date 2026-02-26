@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sales_catalog_section,sales.catalog.section,model_sales_catalog_section,,1,1,1,1
+access_sales_catalog_asset_allocation,sales.catalog.asset.allocation,model_sales_catalog_asset_allocation,,1,1,1,1
+access_sales_catalog_asset_allocation_add_qty_wizard,sales.catalog.asset.allocation.add.qty.wizard,model_sales_catalog_asset_allocation_add_qty_wizard,,1,1,1,1
+access_sales_catalog_asset_allocation_add_qty_wizard_line,sales.catalog.asset.allocation.add.qty.wizard.line,model_sales_catalog_asset_allocation_add_qty_wizard_line,,1,1,1,1
+access_sales_catalog_parking_allocation,sales.catalog.parking.allocation,model_sales_catalog_parking_allocation,,1,1,1,1
+access_sales_catalog_parking_allocation_add_qty_wizard,sales.catalog.parking.allocation.add.qty.wizard,model_sales_catalog_parking_allocation_add_qty_wizard,,1,1,1,1
+access_sales_catalog_parking_allocation_add_qty_wizard_line,sales.catalog.parking.allocation.add.qty.wizard.line,model_sales_catalog_parking_allocation_add_qty_wizard_line,,1,1,1,1
+access_product_product_other_item,product.product.other.item,model_product_product_other_item,,1,1,1,1
+access_product_schedule_wizard,product.schedule.wizard,model_product_schedule_wizard,,1,1,1,1
+access_sale_order_catalog_wizard,sale.order.catalog.wizard,model_sale_order_catalog_wizard,,1,1,1,1

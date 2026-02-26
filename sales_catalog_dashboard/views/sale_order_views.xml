@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Catalog button on sale order form: select assets, parking, other products linked to main product -->
+    <record id="view_order_form_catalog_button" model="ir.ui.view">
+        <field name="name">sale.order.form.catalog.button</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <button name="action_quotation_send" position="before">
+                <button name="action_open_catalog_wizard"
+                        type="object"
+                        string="Catalog"
+                        class="btn-secondary"
+                        invisible="not order_line"/>
+            </button>
+        </field>
+    </record>
+</odoo>

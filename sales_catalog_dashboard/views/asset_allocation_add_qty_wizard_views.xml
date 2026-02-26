@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_asset_allocation_add_qty_wizard_form" model="ir.ui.view">
+        <field name="name">sales.catalog.asset.allocation.add.qty.wizard.form</field>
+        <field name="model">sales.catalog.asset.allocation.add.qty.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Quantity &amp; Serial Numbers">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="allocation_id" invisible="1"/>
+                            <field name="product_id" readonly="1" string="Asset"/>
+                            <field name="quantity" string="Qty"/>
+                            <field name="uom_id" readonly="1" string="Unit of Measure"/>
+                            <field name="destination_property_id" readonly="1" string="Newly Allocating Property" force_save="1"/>
+                        </group>
+                    </group>
+                    <group string="Add an item: assign serial numbers and see previous allocation">
+                            <field name="line_ids" nolabel="1" context="{'default_product_id': product_id}">
+                                <list editable="bottom" create="1" delete="1">
+                                    <field name="product_id" column_invisible="1"/>
+                                    <field name="lot_id" string="Product Serial Numbers" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                                    <field name="prev_property_id" string="Previous Allocated Property" readonly="1"/>
+    <!--                                <field name="prev_warehouse_id" string="Main Warehouse" readonly="1"/>-->
+                                </list>
+                            </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
