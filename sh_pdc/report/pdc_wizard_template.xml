@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_pdc_payment">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>PDC Payment Report</h2>
+                    </center>
+                    <br />
+                     <!-- PDC Summary Table -->
+                     <table class="table table-condensed table-bordered" name="pdc_table" style="width:100%; margin-bottom: 20px;">
+                         <thead style="background-color:#f0f0f0;">
+                             <tr>
+                                 <th width="12%">Name</th>
+                                 <th width="13%">Customer</th>
+                                 <th width="12%">Bank</th>
+                                 <th width="9%">Payment Date</th>
+                                 <th width="11%">Payment Amount</th>
+                                 <th width="14%">Cheque Reference</th>
+                                 <th width="9%">Status</th>
+                                 <th width="20%">Related Invoices</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <tr t-foreach="docs" t-as="doc" style="vertical-align:top;">
+                                 <td><span t-esc="doc.name or ''" /></td>
+                                 <td><span t-esc="doc.partner_id.name if doc.partner_id else ''" /></td>
+                                 <td><span t-esc="doc.bank_id.display_name if doc.bank_id else ''" /></td>
+                                 <td><span t-esc="doc.payment_date.strftime('%d/%m/%Y') if doc.payment_date else ''" /></td>
+                                 <td>
+                                    <span t-if="doc.currency_id">
+                                        <span t-esc="doc.currency_id.symbol or ''"/> <span t-esc="round(doc.payment_amount, 2) if doc.payment_amount else 0"/>
+                                    </span>
+                                    <span t-if="not doc.currency_id">
+                                        <span t-esc="doc.payment_amount or 0"/>
+                                    </span>
+                                </td>
+                                 <td><span t-esc="doc.reference or ''" /></td>
+                                 <td><span t-esc="doc.state or ''" /></td>
+                                 <td style="padding:0;">
+                                     <!-- Invoice Count Badge -->
+                                     <t t-if="doc.invoice_ids and len(doc.invoice_ids) > 0">
+                                         <span class="badge badge-info" style="background-color: #17a2b8; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">
+                                             <t t-esc="len(doc.invoice_ids)"/> Invoice(s)
+                                         </span>
+                                     </t>
+                                     <t t-if="not doc.invoice_ids or len(doc.invoice_ids) == 0">
+                                         <span style="color: #888; font-style: italic;">No invoices</span>
+                                     </t>
+                                 </td>
+                             </tr>
+                         </tbody>
+                     </table>
+
+                     <!-- Invoice Details -->
+                     <t t-if="docs and len(docs) > 0">
+                         <div style="margin-top: 30px;">
+                             <h3 style="color: #333; padding-bottom: 5px; margin-bottom: 15px;">
+                                 Invoice Details
+                             </h3>
+                             
+                             <t t-foreach="docs" t-as="doc">
+                                 <t t-if="doc.invoice_ids and len(doc.invoice_ids) > 0">
+                                     <!-- Simple Invoice Table -->
+                                     <table class="table table-sm table-bordered" style="width: 100%; font-size: 12px; margin-bottom: 20px;">
+                                         <thead style="background-color: #f8f9fa;">
+                                             <tr>
+                                                 <th style="padding: 10px; text-align: left; width: 20%;">Invoice Number</th>
+                                                 <th style="padding: 10px; text-align: center; width: 15%;">Invoice Date</th>
+                                                 <th style="padding: 10px; text-align: center; width: 15%;">Due Date</th>
+                                                 <th style="padding: 10px; text-align: right; width: 18%;">Total Amount</th>
+                                                 <th style="padding: 10px; text-align: right; width: 18%;">Residual Amount</th>
+                                                 <th style="padding: 10px; text-align: center; width: 14%;">Payment State</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <tr t-foreach="doc.invoice_ids" t-as="inv" style="border-bottom: 1px solid #dee2e6;">
+                                                 <td style="padding: 8px; font-weight: bold;">
+                                                     <span t-esc="inv.name or 'N/A'"/>
+                                                 </td>
+                                                 <td style="padding: 8px; text-align: center;">
+                                                     <span t-esc="inv.invoice_date.strftime('%d/%m/%Y') if inv.invoice_date else 'N/A'"/>
+                                                 </td>
+                                                 <td style="padding: 8px; text-align: center;">
+                                                     <span t-esc="inv.invoice_date_due.strftime('%d/%m/%Y') if inv.invoice_date_due else 'N/A'"/>
+                                                 </td>
+                                                 <td style="padding: 8px; text-align: right;">
+                                                     <span t-if="inv.currency_id and inv.amount_total">
+                                                         <span t-esc="inv.currency_id.symbol or ''"/> <span t-esc="round(inv.amount_total, 2)"/>
+                                                     </span>
+                                                     <span t-if="not inv.currency_id or not inv.amount_total">
+                                                         <span t-esc="inv.amount_total or 0"/>
+                                                     </span>
+                                                 </td>
+                                                 <td style="padding: 8px; text-align: right; font-weight: bold;">
+                                                     <span t-if="inv.currency_id and inv.amount_residual">
+                                                         <span t-esc="inv.currency_id.symbol or ''"/> <span t-esc="round(inv.amount_residual, 2)"/>
+                                                     </span>
+                                                     <span t-if="not inv.currency_id or not inv.amount_residual">
+                                                         <span t-esc="inv.amount_residual or 0"/>
+                                                     </span>
+                                                 </td>
+                                                 <td style="padding: 8px; text-align: center;">
+                                                     <span t-esc="inv.payment_state or 'N/A'" 
+                                                           t-att-style="'color: ' + ('#28a745' if inv.payment_state == 'paid' else ('#ffc107' if inv.payment_state == 'partial' else '#dc3545'))"/>
+                                                 </td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                 </t>
+                             </t>
+                         </div>
+                     </t>
+                </div>
+            </t>
+        </t>
+    </template>
+    <record id="paperformat_pdc" model="report.paperformat">
+        <field name="name">PDC</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">45</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="action_report_pdc_payment" model="ir.actions.report">
+        <field name="name">PDC Payment Report</field>
+        <field name="model">pdc.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sh_pdc.report_pdc_payment</field>
+        <field name="report_file">sh_pdc.report_pdc_payment</field>
+        <field name="binding_model_id" ref="sh_pdc.model_pdc_wizard" />
+        <field name="paperformat_id" ref="sh_pdc.paperformat_pdc" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

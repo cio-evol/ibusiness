@@ -1,0 +1,2 @@
+id,name,model_id:id,domain_force,groups,perm_read,perm_write,perm_create,perm_unlink
+rule_pdc_wizard_company,PDC Wizard Multi-Company Rule,model_pdc_wizard,"[('company_id', '=', company_id)]",,1,1,1,1

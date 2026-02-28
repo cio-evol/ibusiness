@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pdc_return_wizard_form_view" model="ir.ui.view">
+        <field name="name">pdc.return.wizard.form</field>
+        <field name="model">pdc.return.wizard</field>
+        <field name="arch" type="xml">
+            <form string="PDC Return">
+                <group>
+                    <field name="pdc_id" readonly="1"/>
+                    <field name="return_type" widget="radio" options="{'horizontal': true}"/>
+                    <field name="reason" placeholder="Enter the reason for returning the cheque..."/>
+                </group>
+                <footer>
+                    <button string="Confirm Return" name="action_confirm_return" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="pdc_return_wizard_action" model="ir.actions.act_window">
+        <field name="name">PDC Return</field>
+        <field name="res_model">pdc.return.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_pdc_id': active_id}</field>
+    </record>
+</odoo>
